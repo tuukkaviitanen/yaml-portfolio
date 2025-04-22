@@ -1,6 +1,7 @@
 github_username: tuukkaviitanen
-title: Software Engineer
 description: Software Engineer with a passion for building web applications and exploring new technologies.
+title: Software Engineer
+name: Tuukka Viitanen
 links:
   - name: LinkedIn
     url: https://www.linkedin.com/in/tuukka-viitanen
@@ -13,16 +14,31 @@ projects:
       - "TypeScript"
   - github_repository: tuukkaviitanen/socratic-chat-bot
     name: Socratic Chat Bot
+    languages:
+      - "Python"
+      - "JavaScript"
   - github_repository: tablebook/tablebook
     name: TableBook
     url: https://tablebook.tuukka.net
+    languages:
+      - "JavaScript"
   - github_repository: tuukkaviitanen/cafe-now-app
     name: Cafe Now App
+    languages:
+      - "Dart"
   - github_repository: tuukkaviitanen/boatzy
     name: Boatzy
+    languages:
+      - "JavaScript"
   - github_repository: tuukkaviitanen/daily-quote-api
     name: Daily Quote API
+    languages:
+      - "Go"
   - github_repository: tuukkaviitanen/mlops-demo
     name: Crypto Predictor (MLOps Demo)
+    languages:
+      - "Python"
   - github_repository: tuukkaviitanen/raspy-monitor
     name: Raspy Monitor
+    languages:
+      - "Go"

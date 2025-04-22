@@ -12,6 +12,8 @@ const LinkSchema = z.object({
   icon_url: z.string().url().optional(),
 });
 
+type Link = z.infer<typeof LinkSchema>;
+
 const ProjectSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
@@ -21,7 +23,10 @@ const ProjectSchema = z.object({
   languages: z.array(z.string()).optional(),
 });
 
+type Project = z.infer<typeof ProjectSchema>;
+
 const ConfigurationSchema = z.object({
+  name: z.string().optional(),
   title: z.string().optional(),
   description: z.string().optional(),
   image_url: z.string().url().optional(),
@@ -41,7 +46,9 @@ export const getConfiguration = async (filePath: string) => {
 
   const configuration = await parseConfigurationString(configFileContent);
 
-  return configuration;
+  const populatedConfiguration = await populateConfiguration(configuration);
+
+  return populatedConfiguration;
 };
 
 const getFileContent = async (filePath: string) => {
@@ -77,4 +84,49 @@ const parseConfigurationString = async (configurationString: string) => {
       );
     }
   }
+};
+
+export type PopulatedConfiguration = Omit<
+  Configuration,
+  "links" | "projects"
+> & {
+  links: Array<Link & { id: string }>;
+  projects: Array<
+    Project & {
+      id: string;
+      github_repository_url?: string;
+      image_url?: string;
+    }
+  >;
+  github_user_url?: string;
+};
+
+const populateConfiguration = async (
+  configuration: Configuration
+): Promise<PopulatedConfiguration> => {
+  const populatedConfiguration = {
+    ...configuration,
+    links:
+      configuration.links?.map((link) => ({
+        ...link,
+        id: Bun.randomUUIDv7(),
+      })) ?? [],
+    projects:
+      configuration.projects?.map((project) => ({
+        ...project,
+        id: Bun.randomUUIDv7(),
+        languages: Array.from(new Set(project.languages)),
+        github_repository_url:
+          project.github_repository &&
+          `https://api.github.com/repos/${project.github_repository}`,
+        image_url:
+          project.image_url &&
+          `https://www.google.com/s2/favicons?domain=${project.url}&sz=64`,
+      })) ?? [],
+    github_user_url:
+      configuration.github_username &&
+      `https://api.github.com/users/${configuration.github_username}`,
+  };
+
+  return populatedConfiguration;
 };
