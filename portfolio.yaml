@@ -42,3 +42,8 @@ projects:
     name: Raspy Monitor
     languages:
       - "Go"
+  - github_repository: tuukkaviitanen/qr-code-api
+    name: QR Core API
+    url: https://qr.tuukka.net
+    languages:
+      - "Rust"

@@ -33,10 +33,9 @@ const App = ({ configuration }: AppParams) => {
               <img src={project.image_url} width="64" />
               <h3>{project.name}</h3>
               <p>{project.description}</p>
-              <a href={project.url}>{project.url}</a>
-              <a href={project.github_repository_url}>
-                {project.github_repository_url}
-              </a>
+              <Link url={project.url} />
+              <Link url={project.github_repository_url} />
+              <h4>Languages</h4>
               {project.languages?.map((language) => (
                 <li key={language}>{language}</li>
               ))}
@@ -47,5 +46,12 @@ const App = ({ configuration }: AppParams) => {
     </main>
   );
 };
+
+const Link = ({ url }: { url?: string }) =>
+  url && (
+    <li>
+      <a href={url}>{url}</a>
+    </li>
+  );
 
 export default App;

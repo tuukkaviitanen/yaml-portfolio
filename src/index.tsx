@@ -2,7 +2,6 @@ import { renderToReadableStream } from "react-dom/server";
 import App from "./App";
 import {
   getConfiguration,
-  type Configuration,
   type PopulatedConfiguration,
 } from "./utils/configuration";
 

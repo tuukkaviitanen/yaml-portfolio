@@ -30,7 +30,7 @@ const ConfigurationSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   image_url: z.string().url().optional(),
-  github_username: z.string().optional(),
+  github_username: z.string(),
   links: z.array(LinkSchema).optional(),
   projects: z.array(ProjectSchema).optional(),
 });
@@ -95,6 +95,7 @@ export type PopulatedConfiguration = Omit<
     Project & {
       id: string;
       github_repository_url?: string;
+      github_repository_api_url?: string;
       image_url?: string;
     }
   >;
@@ -104,13 +105,25 @@ export type PopulatedConfiguration = Omit<
 const populateConfiguration = async (
   configuration: Configuration
 ): Promise<PopulatedConfiguration> => {
+  const github_user_url = `https://api.github.com/users/${configuration.github_username}`;
+  const github_user_api_url = `https://api.github.com/users/${configuration.github_username}`;
+
   const populatedConfiguration = {
     ...configuration,
     links:
-      configuration.links?.map((link) => ({
-        ...link,
-        id: Bun.randomUUIDv7(),
-      })) ?? [],
+      configuration.links
+        ?.concat({
+          name: "GitHub",
+          url: github_user_url,
+        })
+        .map((link) => ({
+          ...link,
+          id: Bun.randomUUIDv7(),
+          icon_url:
+            link.icon_url ||
+            (link.url &&
+              `https://www.google.com/s2/favicons?domain=${link.url}&sz=64`),
+        })) ?? [],
     projects:
       configuration.projects?.map((project) => ({
         ...project,
@@ -118,14 +131,17 @@ const populateConfiguration = async (
         languages: Array.from(new Set(project.languages)),
         github_repository_url:
           project.github_repository &&
+          `https://github.com/${project.github_repository}`,
+        github_repository_api_url:
+          project.github_repository &&
           `https://api.github.com/repos/${project.github_repository}`,
         image_url:
-          project.image_url &&
-          `https://www.google.com/s2/favicons?domain=${project.url}&sz=64`,
+          project.image_url ||
+          (project.url &&
+            `https://www.google.com/s2/favicons?domain=${project.url}&sz=64`),
       })) ?? [],
-    github_user_url:
-      configuration.github_username &&
-      `https://api.github.com/users/${configuration.github_username}`,
+    github_user_api_url,
+    github_user_url,
   };
 
   return populatedConfiguration;
