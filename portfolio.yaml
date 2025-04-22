@@ -1,0 +1,28 @@
+github_username: tuukkaviitanen
+title: Software Engineer
+description: Software Engineer with a passion for building web applications and exploring new technologies.
+links:
+  - name: LinkedIn
+    url: https://www.linkedin.com/in/tuukka-viitanen
+projects:
+  - name: Messenger
+    description: Chat room application
+    url: https://messenger.tuukka.net/
+    github_repository: tuukkaviitanen/messenger
+    languages:
+      - "TypeScript"
+  - github_repository: tuukkaviitanen/socratic-chat-bot
+    name: Socratic Chat Bot
+  - github_repository: tablebook/tablebook
+    name: TableBook
+    url: https://tablebook.tuukka.net
+  - github_repository: tuukkaviitanen/cafe-now-app
+    name: Cafe Now App
+  - github_repository: tuukkaviitanen/boatzy
+    name: Boatzy
+  - github_repository: tuukkaviitanen/daily-quote-api
+    name: Daily Quote API
+  - github_repository: tuukkaviitanen/mlops-demo
+    name: Crypto Predictor (MLOps Demo)
+  - github_repository: tuukkaviitanen/raspy-monitor
+    name: Raspy Monitor

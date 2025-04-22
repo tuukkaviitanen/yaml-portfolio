@@ -1,6 +1,9 @@
-const App = () => {
+import type { Configuration } from "./utils/configuration";
 
-return (<div>Hello my guy!</div>)
+type AppParams = {configuration: Configuration}
+const App = ({configuration}: AppParams) => {
+
+    return (<div>Hello my guy! {configuration.github_username}</div>)
 }
 
 export default App;

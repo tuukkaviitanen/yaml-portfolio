@@ -17,3 +17,4 @@ export class ConfigurationFileEmptyError extends ConfigurationError {
     super("Configuration file is empty");
   }
 }
+export class ConfigurationParsingError extends ConfigurationError {}
