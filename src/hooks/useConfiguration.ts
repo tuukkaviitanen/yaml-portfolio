@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ConfigurationError, UnknownConfigurationError } from "../errors";
+import { ConfigurationError, UnknownConfigurationError } from "../utils/errors";
 import parseConfiguration from "../utils/parseConfiguration";
 
 export function useConfiguration() {

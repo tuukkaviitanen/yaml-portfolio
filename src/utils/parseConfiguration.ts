@@ -1,4 +1,4 @@
-import { ConfigurationFileEmptyError, FileReadError } from "../errors";
+import { ConfigurationFileEmptyError, FileReadError } from "./errors";
 import YAML from "yaml";
 
 const parseConfiguration = async () => {
