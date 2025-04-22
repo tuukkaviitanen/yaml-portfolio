@@ -1,0 +1,9 @@
+name: bun-portfolio-dev
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./src:/app/src
