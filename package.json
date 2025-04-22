@@ -1,15 +1,16 @@
 {
-  "module": "src/index.ts",
+  "module": "src/index.tsx",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/react-dom": "^19.1.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "dev": "bun --watch src/index.ts",
-    "build": "bun build src/index.ts --outdir=dist --target=bun --minify",
+    "dev": "bun --watch src/index.tsx",
+    "build": "bun build src/index.tsx --outdir=dist --target=bun --minify",
     "start": "bun dist/index.js"
   },
   "dependencies": {
