@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  ConfigurationFetchingError,
   ConfigurationFileEmptyError,
   ConfigurationParsingError,
   FileReadError,
@@ -33,6 +34,26 @@ const ConfigurationSchema = z.object({
   github_username: z.string(),
   links: z.array(LinkSchema).optional(),
   projects: z.array(ProjectSchema).optional(),
+});
+
+const GitHubUserSchema = z.object({
+  avatar_url: z.string().url(),
+  url: z.string().url(),
+  html_url: z.string().url(),
+  name: z.string(),
+  location: z.string(),
+  bio: z.string(),
+});
+
+const GitHubRepositorySchema = z.object({
+  name: z.string(),
+  html_url: z.string().url(),
+  description: z.string().nullable(),
+  languages_url: z.string().url(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  homepage: z.string().url().nullable(),
+  language: z.string().nullable(),
 });
 
 export type Configuration = z.infer<typeof ConfigurationSchema>;
@@ -105,8 +126,10 @@ export type PopulatedConfiguration = Omit<
 const populateConfiguration = async (
   configuration: Configuration
 ): Promise<PopulatedConfiguration> => {
-  const github_user_url = `https://api.github.com/users/${configuration.github_username}`;
+  const github_user_url = `https://github.com/${configuration.github_username}`;
   const github_user_api_url = `https://api.github.com/users/${configuration.github_username}`;
+
+  const github_user_info = await getUserInfo(configuration.github_username);
 
   const populatedConfiguration = {
     ...configuration,
@@ -128,7 +151,7 @@ const populateConfiguration = async (
       configuration.projects?.map((project) => ({
         ...project,
         id: Bun.randomUUIDv7(),
-        languages: Array.from(new Set(project.languages)),
+        languages: Array.from(new Set(project.languages)), // Remove duplicates
         github_repository_url:
           project.github_repository &&
           `https://github.com/${project.github_repository}`,
@@ -142,7 +165,28 @@ const populateConfiguration = async (
       })) ?? [],
     github_user_api_url,
     github_user_url,
+    description: configuration.description || github_user_info.bio,
+    image_url: configuration.image_url || github_user_info.avatar_url,
+    name: configuration.name || github_user_info.name,
   };
 
   return populatedConfiguration;
+};
+
+const getUserInfo = async (github_repository: string) => {
+  const url = `https://api.github.com/users/${github_repository}`;
+  try {
+    const response = await Bun.fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const repositoryInfo = await response.json();
+    return await GitHubUserSchema.parseAsync(repositoryInfo);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown validation error";
+    throw new ConfigurationFetchingError(
+      `GitHub API User info validation error: ${errorMessage}`
+    );
+  }
 };

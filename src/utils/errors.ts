@@ -18,3 +18,4 @@ export class ConfigurationFileEmptyError extends ConfigurationError {
   }
 }
 export class ConfigurationParsingError extends ConfigurationError {}
+export class ConfigurationFetchingError extends ConfigurationError {}
