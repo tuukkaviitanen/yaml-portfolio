@@ -61,15 +61,6 @@ export type Configuration = z.infer<typeof ConfigurationSchema>;
 export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
 
-  const existingConfiguration = await Bun.redis.get(filePath);
-
-  if (existingConfiguration) {
-    const parsedConfiguration = JSON.parse(
-      existingConfiguration
-    ) as PopulatedConfiguration;
-    return parsedConfiguration;
-  }
-
   if (!configFileContent) {
     throw new ConfigurationFileEmptyError();
   }
@@ -77,9 +68,6 @@ export const getConfiguration = async (filePath: string) => {
   const configuration = await parseConfigurationString(configFileContent);
 
   const populatedConfiguration = await populateConfiguration(configuration);
-
-  await Bun.redis.set(filePath, JSON.stringify(populatedConfiguration));
-  await Bun.redis.expire(filePath, 3600);
 
   return populatedConfiguration;
 };
@@ -218,11 +206,18 @@ const populateConfiguration = async (
 const getUserInfo = async (github_username: string) => {
   const url = `https://api.github.com/users/${github_username}`;
   try {
+    const cachedUserInfo = await Bun.redis.get(url);
+    if (cachedUserInfo) {
+      const parsedUserInfo = JSON.parse(cachedUserInfo);
+      return await GitHubUserSchema.parseAsync(parsedUserInfo);
+    }
     const response = await Bun.fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const userInfo = await response.json();
+    await Bun.redis.set(url, JSON.stringify(userInfo));
+    await Bun.redis.expire(url, 3600);
     return await GitHubUserSchema.parseAsync(userInfo);
   } catch (error) {
     const errorMessage =
@@ -236,11 +231,18 @@ const getUserInfo = async (github_username: string) => {
 const getRepositoryInfo = async (github_repository: string) => {
   const url = `https://api.github.com/repos/${github_repository}`;
   try {
+    const cachedRepositoryInfo = await Bun.redis.get(url);
+    if (cachedRepositoryInfo) {
+      const parsedRepositoryInfo = JSON.parse(cachedRepositoryInfo);
+      return await GitHubRepositorySchema.parseAsync(parsedRepositoryInfo);
+    }
     const response = await Bun.fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const repositoryInfo = await response.json();
+    await Bun.redis.set(url, JSON.stringify(repositoryInfo));
+    await Bun.redis.expire(url, 3600);
     return await GitHubRepositorySchema.parseAsync(repositoryInfo);
   } catch (error) {
     const errorMessage =

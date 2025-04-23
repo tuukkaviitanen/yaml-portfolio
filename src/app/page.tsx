@@ -63,6 +63,7 @@ export default async function Home() {
                 />
               )}
               <a
+                target="_blank"
                 href={link.url}
                 className="text-blue-600 hover:underline font-medium dark:text-blue-400"
               >
@@ -115,6 +116,7 @@ const Link = ({ url }: { url?: string }) =>
   url && (
     <li>
       <a
+        target="_blank"
         href={url}
         className="text-blue-600 hover:underline break-words dark:text-blue-400"
       >
