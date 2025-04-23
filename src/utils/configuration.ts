@@ -16,7 +16,7 @@ const LinkSchema = z.object({
 type Link = z.infer<typeof LinkSchema>;
 
 const ProjectSchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
   description: z.string().optional(),
   url: z.string().url().optional(),
   github_repository: z.string().optional(),
@@ -48,18 +48,28 @@ const GitHubUserSchema = z.object({
 const GitHubRepositorySchema = z.object({
   name: z.string(),
   html_url: z.string().url(),
-  description: z.string().nullable(),
+  description: z.string().optional(),
   languages_url: z.string().url(),
   created_at: z.string(),
   updated_at: z.string(),
-  homepage: z.string().url().nullable(),
-  language: z.string().nullable(),
+  // homepage: z.string().url().optional(),
+  language: z.string().optional(),
 });
 
 export type Configuration = z.infer<typeof ConfigurationSchema>;
 
 export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
+
+  const existingConfiguration = await Bun.redis.get(filePath);
+
+  if (existingConfiguration) {
+    console.log("Using cached configuration");
+    const parsedConfiguration = JSON.parse(
+      existingConfiguration
+    ) as PopulatedConfiguration;
+    return parsedConfiguration;
+  }
 
   if (!configFileContent) {
     throw new ConfigurationFileEmptyError();
@@ -68,6 +78,10 @@ export const getConfiguration = async (filePath: string) => {
   const configuration = await parseConfigurationString(configFileContent);
 
   const populatedConfiguration = await populateConfiguration(configuration);
+
+  await Bun.redis.set(filePath, JSON.stringify(populatedConfiguration));
+  await Bun.redis.expire(filePath, 3600);
+  console.log("Pushed new configuration to cache");
 
   return populatedConfiguration;
 };
@@ -129,7 +143,28 @@ const populateConfiguration = async (
   const github_user_url = `https://github.com/${configuration.github_username}`;
   const github_user_api_url = `https://api.github.com/users/${configuration.github_username}`;
 
-  const github_user_info = await getUserInfo(configuration.github_username);
+  let github_user_info;
+  try {
+    github_user_info = await getUserInfo(configuration.github_username);
+  } catch {
+    github_user_info = undefined;
+  }
+  const github_repository_infos = new Map(
+    await Promise.all(
+      configuration.projects
+        ?.filter((project) => project.github_repository) // Make sure the project has a github_repository defined
+        .map(async (project) => {
+          try {
+            const repositoryInfo = await getRepositoryInfo(
+              project.github_repository!
+            );
+            return [project.github_repository!, repositoryInfo] as const;
+          } catch {
+            return [project.github_repository!, undefined] as const;
+          }
+        }) ?? []
+    )
+  );
 
   const populatedConfiguration = {
     ...configuration,
@@ -148,45 +183,72 @@ const populateConfiguration = async (
               `https://www.google.com/s2/favicons?domain=${link.url}&sz=64`),
         })) ?? [],
     projects:
-      configuration.projects?.map((project) => ({
-        ...project,
-        id: Bun.randomUUIDv7(),
-        languages: Array.from(new Set(project.languages)), // Remove duplicates
-        github_repository_url:
-          project.github_repository &&
-          `https://github.com/${project.github_repository}`,
-        github_repository_api_url:
-          project.github_repository &&
-          `https://api.github.com/repos/${project.github_repository}`,
-        image_url:
-          project.image_url ||
-          (project.url &&
-            `https://www.google.com/s2/favicons?domain=${project.url}&sz=64`),
-      })) ?? [],
+      configuration.projects?.map((project) => {
+        const githubProjectInfo = project.github_repository
+          ? github_repository_infos.get(project.github_repository)
+          : undefined;
+
+        return {
+          ...project,
+          id: Bun.randomUUIDv7(),
+          languages: Array.from(new Set(project.languages)), // Remove duplicate languages
+          github_repository_url:
+            project.github_repository &&
+            `https://github.com/${project.github_repository}`,
+          github_repository_api_url:
+            project.github_repository &&
+            `https://api.github.com/repos/${project.github_repository}`,
+          image_url:
+            project.image_url ||
+            (project.url &&
+              `https://www.google.com/s2/favicons?domain=${project.url}&sz=64`),
+          name: project.name || githubProjectInfo?.name,
+          description: project.description || githubProjectInfo?.description,
+          url: project.url || githubProjectInfo?.html_url,
+        };
+      }) ?? [],
     github_user_api_url,
     github_user_url,
-    description: configuration.description || github_user_info.bio,
-    image_url: configuration.image_url || github_user_info.avatar_url,
-    name: configuration.name || github_user_info.name,
+    description: configuration.description || github_user_info?.bio,
+    image_url: configuration.image_url || github_user_info?.avatar_url,
+    name: configuration.name || github_user_info?.name,
   };
 
   return populatedConfiguration;
 };
 
-const getUserInfo = async (github_repository: string) => {
-  const url = `https://api.github.com/users/${github_repository}`;
+const getUserInfo = async (github_username: string) => {
+  const url = `https://api.github.com/users/${github_username}`;
+  try {
+    const response = await Bun.fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const userInfo = await response.json();
+    return await GitHubUserSchema.parseAsync(userInfo);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown validation error";
+    throw new ConfigurationFetchingError(
+      `GitHub API User info validation error: ${errorMessage}`
+    );
+  }
+};
+
+const getRepositoryInfo = async (github_repository: string) => {
+  const url = `https://api.github.com/repos/${github_repository}`;
   try {
     const response = await Bun.fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const repositoryInfo = await response.json();
-    return await GitHubUserSchema.parseAsync(repositoryInfo);
+    return await GitHubRepositorySchema.parseAsync(repositoryInfo);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown validation error";
     throw new ConfigurationFetchingError(
-      `GitHub API User info validation error: ${errorMessage}`
+      `GitHub API Repository info validation error: ${errorMessage}`
     );
   }
 };
