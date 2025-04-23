@@ -19,14 +19,14 @@ export default async function Home() {
   const { links, projects, description, image_url, name, title } =
     await configurationPromise;
   return (
-    <main className="min-h-screen bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
-      <header className="bg-blue-600 text-white py-4 dark:bg-blue-800">
+    <main className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-800 dark:text-gray-100">
+      <header className="bg-gray-900 text-white py-4 dark:bg-gray-700">
         <h1 className="text-center text-3xl font-bold">
           {title || "Portfolio"}
         </h1>
       </header>
       <div className="container mx-auto p-6">
-        <div className="profile bg-white shadow-md rounded-lg p-6 mb-8 dark:bg-gray-800 dark:shadow-lg">
+        <div className="profile bg-white shadow-md rounded-lg p-6 mb-8 dark:bg-gray-700 dark:shadow-lg">
           {image_url && (
             <div className="flex justify-center mb-4">
               <Image
@@ -39,10 +39,10 @@ export default async function Home() {
             </div>
           )}
           <h2 className="text-2xl font-semibold text-center mb-2">About Me</h2>
-          <h3 className="text-xl text-center text-gray-600 dark:text-gray-400">
+          <h3 className="text-xl text-center text-gray-600 dark:text-gray-300">
             {name}
           </h3>
-          <p className="text-center text-gray-700 dark:text-gray-300 mt-4">
+          <p className="text-center text-gray-700 dark:text-gray-400 mt-4">
             {description}
           </p>
         </div>
@@ -51,7 +51,7 @@ export default async function Home() {
           {links?.map((link) => (
             <li
               key={link.id}
-              className="bg-white shadow-md rounded-lg p-4 flex items-center space-x-4 dark:bg-gray-800 dark:shadow-lg"
+              className="bg-white shadow-md rounded-lg p-4 flex items-center space-x-4 dark:bg-gray-700 dark:shadow-lg"
             >
               {link.icon_url && (
                 <Image
@@ -77,7 +77,7 @@ export default async function Home() {
             {projects?.map((project) => (
               <div
                 key={project.id}
-                className="project bg-white shadow-md rounded-lg p-6 dark:bg-gray-800 dark:shadow-lg"
+                className="project bg-white shadow-md rounded-lg p-6 dark:bg-gray-700 dark:shadow-lg"
               >
                 {project.image_url && (
                   <Image
@@ -89,7 +89,7 @@ export default async function Home() {
                   />
                 )}
                 <h3 className="text-xl font-semibold mb-2">{project.name}</h3>
-                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                <p className="text-gray-700 dark:text-gray-400 mb-4">
                   {project.description}
                 </p>
                 <ul className="space-y-2">
@@ -97,7 +97,7 @@ export default async function Home() {
                   <Link url={project.github_repository_url} />
                 </ul>
                 <h4 className="text-lg font-semibold mt-4">Languages</h4>
-                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-400">
                   {project.languages?.map((language) => (
                     <li key={language}>{language}</li>
                   ))}
