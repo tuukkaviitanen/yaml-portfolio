@@ -16,67 +16,95 @@ export const metadata = async (): Promise<Metadata> => {
 };
 
 export default async function Home() {
-  const { links, projects, description, image_url, name } =
+  const { links, projects, description, image_url, name, title } =
     await configurationPromise;
   return (
-    <main>
-      <header>
-        <h1>Portfolio</h1>
+    <main className="min-h-screen bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
+      <header className="bg-blue-600 text-white py-4 dark:bg-blue-800">
+        <h1 className="text-center text-3xl font-bold">
+          {title || "Portfolio"}
+        </h1>
       </header>
-      <div className="container">
-        <div className="profile">
+      <div className="container mx-auto p-6">
+        <div className="profile bg-white shadow-md rounded-lg p-6 mb-8 dark:bg-gray-800 dark:shadow-lg">
           {image_url && (
-            <Image
-              src={image_url}
-              height={600}
-              alt="profile image"
-              width={200}
-            />
+            <div className="flex justify-center mb-4">
+              <Image
+                src={image_url}
+                height={200}
+                alt="Profile image"
+                width={200}
+                className="rounded-full"
+              />
+            </div>
           )}
-          <h2>About Me</h2>
-          <h3>{name}</h3>
-          <p>{description}</p>
+          <h2 className="text-2xl font-semibold text-center mb-2">About Me</h2>
+          <h3 className="text-xl text-center text-gray-600 dark:text-gray-400">
+            {name}
+          </h3>
+          <p className="text-center text-gray-700 dark:text-gray-300 mt-4">
+            {description}
+          </p>
         </div>
-        <h2>Links</h2>
-        <div className="links">
+        <h2 className="text-2xl font-semibold mb-4">Links</h2>
+        <ul className="links grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {links?.map((link) => (
-            <li key={link.id}>
-              <a href={link.url}>
-                {link.icon_url && (
-                  <Image
-                    src={link.icon_url}
-                    alt={`link icon for ${link.name}`}
-                    height={20}
-                    width={20}
-                  />
-                )}
+            <li
+              key={link.id}
+              className="bg-white shadow-md rounded-lg p-4 flex items-center space-x-4 dark:bg-gray-800 dark:shadow-lg"
+            >
+              {link.icon_url && (
+                <Image
+                  src={link.icon_url}
+                  alt={`Link icon for ${link.name}`}
+                  height={20}
+                  width={20}
+                  className="rounded"
+                />
+              )}
+              <a
+                href={link.url}
+                className="text-blue-600 hover:underline font-medium dark:text-blue-400"
+              >
                 {link.name}
               </a>
             </li>
           ))}
-        </div>
-        <div className="projects">
-          <h2>Projects</h2>
-          {projects?.map((project) => (
-            <div key={project.id} className="project">
-              {project.image_url && (
-                <Image
-                  src={project.image_url}
-                  alt={`project image for ${project.name}`}
-                  height={64}
-                  width={64}
-                />
-              )}
-              <h3>{project.name}</h3>
-              <p>{project.description}</p>
-              <Link url={project.url} />
-              <Link url={project.github_repository_url} />
-              <h4>Languages</h4>
-              {project.languages?.map((language) => (
-                <li key={language}>{language}</li>
-              ))}
-            </div>
-          ))}
+        </ul>
+        <div className="projects mt-8">
+          <h2 className="text-2xl font-semibold mb-4">Projects</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects?.map((project) => (
+              <div
+                key={project.id}
+                className="project bg-white shadow-md rounded-lg p-6 dark:bg-gray-800 dark:shadow-lg"
+              >
+                {project.image_url && (
+                  <Image
+                    src={project.image_url}
+                    alt={`Project image for ${project.name}`}
+                    height={64}
+                    width={64}
+                    className="rounded mb-4"
+                  />
+                )}
+                <h3 className="text-xl font-semibold mb-2">{project.name}</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                  {project.description}
+                </p>
+                <ul className="space-y-2">
+                  <Link url={project.url} />
+                  <Link url={project.github_repository_url} />
+                </ul>
+                <h4 className="text-lg font-semibold mt-4">Languages</h4>
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
+                  {project.languages?.map((language) => (
+                    <li key={language}>{language}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </main>
@@ -86,6 +114,11 @@ export default async function Home() {
 const Link = ({ url }: { url?: string }) =>
   url && (
     <li>
-      <a href={url}>{url}</a>
+      <a
+        href={url}
+        className="text-blue-600 hover:underline break-words dark:text-blue-400"
+      >
+        {url}
+      </a>
     </li>
   );

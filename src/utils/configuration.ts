@@ -52,8 +52,8 @@ const GitHubRepositorySchema = z.object({
   languages_url: z.string().url(),
   created_at: z.string(),
   updated_at: z.string(),
-  // homepage: z.string().url().optional(),
   language: z.string().optional(),
+  homepage: z.string(),
 });
 
 export type Configuration = z.infer<typeof ConfigurationSchema>;
@@ -64,7 +64,6 @@ export const getConfiguration = async (filePath: string) => {
   const existingConfiguration = await Bun.redis.get(filePath);
 
   if (existingConfiguration) {
-    console.log("Using cached configuration");
     const parsedConfiguration = JSON.parse(
       existingConfiguration
     ) as PopulatedConfiguration;
@@ -81,7 +80,6 @@ export const getConfiguration = async (filePath: string) => {
 
   await Bun.redis.set(filePath, JSON.stringify(populatedConfiguration));
   await Bun.redis.expire(filePath, 3600);
-  console.log("Pushed new configuration to cache");
 
   return populatedConfiguration;
 };
@@ -204,7 +202,7 @@ const populateConfiguration = async (
               `https://www.google.com/s2/favicons?domain=${project.url}&sz=64`),
           name: project.name || githubProjectInfo?.name,
           description: project.description || githubProjectInfo?.description,
-          url: project.url || githubProjectInfo?.html_url,
+          url: project.url || githubProjectInfo?.homepage,
         };
       }) ?? [],
     github_user_api_url,

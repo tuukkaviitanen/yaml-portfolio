@@ -1,5 +1,5 @@
 github_username: tuukkaviitanen
-title: Tuukka Viitanen | Software Engineer
+title: Tuukka Viitanen | Software Engineer | Portfolio
 name: Tuukka Viitanen
 links:
   - name: LinkedIn
@@ -44,5 +44,6 @@ projects:
   - github_repository: tuukkaviitanen/qr-code-api
     name: QR Core API
     url: https://qr.tuukka.net
+    image_url: https://qr.tuukka.net/svg/https://qr.tuukka.net
     languages:
       - "Rust"
