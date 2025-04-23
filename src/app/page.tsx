@@ -1,6 +1,7 @@
 import { getConfiguration } from "@/utils/configuration";
 import { Metadata } from "next";
 import Image from "next/image";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 const CONFIG_FILE_PATH = process.env.CONFIG_FILE_PATH || "portfolio.yaml";
 
@@ -65,9 +66,10 @@ export default async function Home() {
               <a
                 target="_blank"
                 href={link.url}
-                className="text-blue-600 hover:underline font-medium dark:text-blue-400"
+                className="text-blue-600 hover:underline font-medium flex items-center space-x-2 dark:text-blue-400"
               >
-                {link.name}
+                <span>{link.name}</span>
+                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
               </a>
             </li>
           ))}
@@ -118,9 +120,10 @@ const Link = ({ url }: { url?: string }) =>
       <a
         target="_blank"
         href={url}
-        className="text-blue-600 hover:underline break-words dark:text-blue-400"
+        className="text-blue-600 hover:underline break-words flex items-center space-x-2 dark:text-blue-400"
       >
-        {url}
+        <span>{url}</span>
+        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
       </a>
     </li>
   );
