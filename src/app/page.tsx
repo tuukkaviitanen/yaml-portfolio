@@ -3,12 +3,12 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
+export const dynamic = "force-dynamic"; // Forces SSR
+
 const CONFIG_FILE_PATH = process.env.CONFIG_FILE_PATH || "portfolio.yaml";
 
-const configurationPromise = getConfiguration(CONFIG_FILE_PATH);
-
 export const metadata = async (): Promise<Metadata> => {
-  const config = await configurationPromise;
+  const config = await getConfiguration(CONFIG_FILE_PATH);
   return {
     title: config.title || "Portfolio",
     description: config.description,
@@ -18,7 +18,7 @@ export const metadata = async (): Promise<Metadata> => {
 
 export default async function Home() {
   const { links, projects, description, image_url, name, title } =
-    await configurationPromise;
+    await getConfiguration(CONFIG_FILE_PATH);
   return (
     <main className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-800 dark:text-gray-100">
       <header className="bg-gray-900 text-white py-4 dark:bg-gray-700">

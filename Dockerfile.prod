@@ -1,0 +1,23 @@
+FROM oven/bun:latest AS builder
+
+WORKDIR /app
+
+COPY package.json bun.lockb tsconfig.json postcss.config.mjs next.config.ts ./
+
+RUN bun install
+
+COPY ./src ./src
+
+RUN bun run build
+
+FROM oven/bun:latest
+
+WORKDIR /app
+
+COPY ./public /app/public
+COPY --from=builder /app/.next/static /app/.next/static
+COPY --from=builder /app/.next/standalone/ ./
+
+COPY postcss.config.mjs ./
+
+CMD [ "bun", "server.js" ]

@@ -71,8 +71,6 @@ export const getConfiguration = async (filePath: string) => {
 
   const populatedConfiguration = await populateConfiguration(configuration);
 
-  console.log(populatedConfiguration);
-
   return populatedConfiguration;
 };
 
