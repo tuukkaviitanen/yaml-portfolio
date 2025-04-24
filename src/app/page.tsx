@@ -33,7 +33,7 @@ export default async function Home() {
               <Image
                 src={image_url}
                 height={200}
-                alt="Profile image"
+                alt=""
                 width={200}
                 className="rounded-full"
               />
@@ -57,7 +57,7 @@ export default async function Home() {
               {link.icon_url && (
                 <Image
                   src={link.icon_url}
-                  alt={`Link icon for ${link.name}`}
+                  alt=""
                   height={20}
                   width={20}
                   className="rounded"
@@ -85,7 +85,7 @@ export default async function Home() {
                 {project.image_url && (
                   <Image
                     src={project.image_url}
-                    alt={`Project image for ${project.name}`}
+                    alt=""
                     height={64}
                     width={64}
                     className="rounded mb-4"
@@ -100,9 +100,15 @@ export default async function Home() {
                   <Link url={project.github_repository_url} />
                 </ul>
                 <h4 className="text-lg font-semibold mt-4">Languages</h4>
-                <ul className="list-disc list-inside text-gray-700 dark:text-gray-400">
+                <ul className="text-gray-700 dark:text-gray-400 grid grid-cols-2 xl:grid-cols-3 gap-3 list-disc mx-3 mt-4">
                   {project.languages?.map((language) => (
                     <li key={language}>{language}</li>
+                  ))}
+                </ul>
+                <h4 className="text-lg font-semibold mt-4">Technologies</h4>
+                <ul className="text-gray-700 dark:text-gray-400 grid grid-cols-2 xl:grid-cols-3 gap-3 list-disc mx-3 mt-4">
+                  {project.technologies?.map((technology) => (
+                    <li key={technology}>{technology}</li>
                   ))}
                 </ul>
               </div>

@@ -22,6 +22,7 @@ const ProjectSchema = z.object({
   github_repository: z.string().optional(),
   image_url: z.string().url().optional(),
   languages: z.array(z.string()).optional(),
+  technologies: z.array(z.string()).optional(),
 });
 
 type Project = z.infer<typeof ProjectSchema>;
@@ -54,6 +55,7 @@ const GitHubRepositorySchema = z.object({
   updated_at: z.string(),
   language: z.string().optional(),
   homepage: z.string(),
+  languages: z.array(z.string()).optional(),
 });
 
 export type Configuration = z.infer<typeof ConfigurationSchema>;
@@ -68,6 +70,8 @@ export const getConfiguration = async (filePath: string) => {
   const configuration = await parseConfigurationString(configFileContent);
 
   const populatedConfiguration = await populateConfiguration(configuration);
+
+  console.log(populatedConfiguration);
 
   return populatedConfiguration;
 };
@@ -118,6 +122,7 @@ export type PopulatedConfiguration = Omit<
       github_repository_url?: string;
       github_repository_api_url?: string;
       image_url?: string;
+      languages?: Array<string>;
     }
   >;
   github_user_url?: string;
@@ -174,10 +179,12 @@ const populateConfiguration = async (
           ? github_repository_infos.get(project.github_repository)
           : undefined;
 
+        const project_url = project.url || githubProjectInfo?.homepage;
+
         return {
           ...project,
           id: Bun.randomUUIDv7(),
-          languages: Array.from(new Set(project.languages)), // Remove duplicate languages
+          technologies: Array.from(new Set(project.technologies)), // Remove duplicate technologies
           github_repository_url:
             project.github_repository &&
             `https://github.com/${project.github_repository}`,
@@ -186,11 +193,12 @@ const populateConfiguration = async (
             `https://api.github.com/repos/${project.github_repository}`,
           image_url:
             project.image_url ||
-            (project.url &&
-              `https://www.google.com/s2/favicons?domain=${project.url}&sz=64`),
+            (project_url &&
+              `https://www.google.com/s2/favicons?domain=${project_url}&sz=64`),
           name: project.name || githubProjectInfo?.name,
           description: project.description || githubProjectInfo?.description,
-          url: project.url || githubProjectInfo?.homepage,
+          url: project_url,
+          languages: project.languages || githubProjectInfo?.languages,
         };
       }) ?? [],
     github_user_api_url,
@@ -241,6 +249,16 @@ const getRepositoryInfo = async (github_repository: string) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const repositoryInfo = await response.json();
+
+    if (repositoryInfo.languages_url) {
+      const response = await Bun.fetch(repositoryInfo?.languages_url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const languages = await response.json();
+      repositoryInfo.languages = Object.keys(languages);
+    }
+
     await Bun.redis.set(url, JSON.stringify(repositoryInfo));
     await Bun.redis.expire(url, 3600);
     return await GitHubRepositorySchema.parseAsync(repositoryInfo);

@@ -1,5 +1,5 @@
 github_username: tuukkaviitanen
-title: Tuukka Viitanen | Software Engineer | Portfolio
+title: Portfolio | Tuukka Viitanen | Software Engineer
 name: Tuukka Viitanen
 links:
   - name: LinkedIn
@@ -9,41 +9,59 @@ projects:
     description: Chat room application
     url: https://messenger.tuukka.net/
     github_repository: tuukkaviitanen/messenger
-    languages:
-      - "TypeScript"
+    technologies:
+      - "React"
+      - "Redux"
+      - "Node"
+      - "Express"
+      - "PostgreSQL"
+      - "Redis"
+      - "WebSockets"
   - github_repository: tuukkaviitanen/socratic-chat-bot
     name: Socratic Chat Bot
-    languages:
-      - "Python"
-      - "JavaScript"
+    technologies:
+      - "Flask"
+      - "Llama"
   - github_repository: tablebook/tablebook
     name: TableBook
     url: https://tablebook.tuukka.net
-    languages:
-      - "JavaScript"
+    image_url: https://tablebook.tuukka.net/assets/logo-CnEbOjTu.png
+    technologies:
+      - "React"
+      - "Express"
+      - "MongoDB"
+      - "OpenAPI"
+      - "Node"
   - github_repository: tuukkaviitanen/cafe-now-app
     name: Cafe Now App
     languages:
       - "Dart"
+    technologies:
+      - "Flutter"
   - github_repository: tuukkaviitanen/boatzy
     name: Boatzy
-    languages:
-      - "JavaScript"
+    technologies:
+      - "React"
+      - "Node"
   - github_repository: tuukkaviitanen/daily-quote-api
     name: Daily Quote API
-    languages:
-      - "Go"
+    technologies:
+      - "Gin"
+      - "SQLite"
+      - "OpenAPI"
   - github_repository: tuukkaviitanen/mlops-demo
     name: Crypto Predictor (MLOps Demo)
-    languages:
-      - "Python"
+    technologies:
+      - "Flask"
+      - "OpenAPI"
   - github_repository: tuukkaviitanen/raspy-monitor
     name: Raspy Monitor
-    languages:
-      - "Go"
+    technologies:
+      - "InfluxDB"
+      - "Grafana"
   - github_repository: tuukkaviitanen/qr-code-api
     name: QR Core API
     url: https://qr.tuukka.net
-    image_url: https://qr.tuukka.net/png/https://qr.tuukka.net
-    languages:
-      - "Rust"
+    technologies:
+      - "Axum"
+      - "OpenAPI"
