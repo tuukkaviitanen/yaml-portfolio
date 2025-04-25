@@ -1,7 +1,6 @@
 name: bun-portfolio-dev
 services:
   app:
-    container_name: app
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -15,7 +14,6 @@ services:
     ports:
       - 3000:3000
   redis:
-    container_name: redis
     image: redis:latest
     ports:
       - 6379:6379
