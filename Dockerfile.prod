@@ -1,16 +1,16 @@
-FROM oven/bun:latest AS builder
+FROM oven/bun:1.2.10-slim AS builder
 
 WORKDIR /app
 
-COPY package.json bun.lockb tsconfig.json postcss.config.mjs next.config.ts ./
+COPY package.json bun.lock tsconfig.json postcss.config.mjs next.config.ts ./
 
-RUN bun install
+RUN bun install --frozen-lockfile
 
 COPY ./src ./src
 
 RUN bun run build
 
-FROM oven/bun:latest
+FROM oven/bun:1.2.10-slim
 
 WORKDIR /app
 

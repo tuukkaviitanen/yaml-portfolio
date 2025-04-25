@@ -97,3 +97,4 @@ projects:
       - "Bun"
       - "Tailwind CSS"
       - "Docker"
+      - "Redis"
