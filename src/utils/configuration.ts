@@ -20,7 +20,7 @@ const ProjectSchema = z.object({
   description: z.string().optional(),
   url: z.string().url().optional(),
   github_repository: z.string().optional(),
-  image_url: z.string().url().optional(),
+  image_url: z.string().url().optional().nullable(),
   languages: z.array(z.string()).optional(),
   technologies: z.array(z.string()).optional(),
 });
@@ -54,7 +54,7 @@ const GitHubRepositorySchema = z.object({
   created_at: z.string(),
   updated_at: z.string(),
   language: z.string().optional(),
-  homepage: z.string(),
+  homepage: z.string().nullable(),
   languages: z.array(z.string()).optional(),
 });
 
@@ -177,7 +177,14 @@ const populateConfiguration = async (
           ? github_repository_infos.get(project.github_repository)
           : undefined;
 
-        const project_url = project.url || githubProjectInfo?.homepage;
+        const project_url =
+          (project.url || githubProjectInfo?.homepage) ?? undefined;
+
+        const image_url = project.image_url
+          ? project.image_url
+          : typeof project.image_url === "undefined" && project_url
+          ? `https://www.google.com/s2/favicons?domain=${project_url}&sz=64`
+          : undefined;
 
         return {
           ...project,
@@ -189,10 +196,7 @@ const populateConfiguration = async (
           github_repository_api_url:
             project.github_repository &&
             `https://api.github.com/repos/${project.github_repository}`,
-          image_url:
-            project.image_url ||
-            (project_url &&
-              `https://www.google.com/s2/favicons?domain=${project_url}&sz=64`),
+          image_url,
           name: project.name || githubProjectInfo?.name,
           description: project.description || githubProjectInfo?.description,
           url: project_url,

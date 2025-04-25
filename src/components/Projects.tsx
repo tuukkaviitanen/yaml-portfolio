@@ -42,9 +42,9 @@ const Project = ({
       <TertiaryTitle>{project.name}</TertiaryTitle>
       <Text>{project.description}</Text>
       <ul className="space-y-2">
-        <ProjectLink title="GitHub Repository" link={project.url} />
+        <ProjectLink title="Project Page" link={project.url} />
         <ProjectLink
-          title="Project Page"
+          title="GitHub Repository"
           link={project.github_repository_url}
         />
       </ul>

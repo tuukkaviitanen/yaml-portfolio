@@ -1,5 +1,5 @@
 github_username: tuukkaviitanen
-title: Portfolio | Tuukka Viitanen | Software Engineer
+title: Portfolio
 name: Tuukka Viitanen
 links:
   - name: LinkedIn
@@ -9,6 +9,7 @@ projects:
     description: Chat room application
     url: https://messenger.tuukka.net/
     github_repository: tuukkaviitanen/messenger
+    image_url: https://messenger.tuukka.net/images/dove_logo.png
     technologies:
       - "React"
       - "Redux"
@@ -17,11 +18,16 @@ projects:
       - "PostgreSQL"
       - "Redis"
       - "WebSockets"
+      - "Docker"
+
   - github_repository: tuukkaviitanen/socratic-chat-bot
     name: Socratic Chat Bot
+    image_url: https://socratic-chat-bot.tuukka.net/static/socrates.png
     technologies:
       - "Flask"
       - "Llama"
+      - "Docker"
+
   - github_repository: tablebook/tablebook
     name: TableBook
     url: https://tablebook.tuukka.net
@@ -32,36 +38,62 @@ projects:
       - "MongoDB"
       - "OpenAPI"
       - "Node"
+      - "Docker"
+
   - github_repository: tuukkaviitanen/cafe-now-app
     name: Cafe Now App
+    image_url: https://cafe-now.tuukka.net/icons/Icon-192.png
     languages:
       - "Dart"
     technologies:
       - "Flutter"
+
   - github_repository: tuukkaviitanen/boatzy
     name: Boatzy
+    image_url: https://boatzy.tuukka.net/assets/dice-six-D0EdlWEg.svg
     technologies:
       - "React"
       - "Node"
+      - "Docker"
+
+  - github_repository: tuukkaviitanen/qr-code-api
+    name: QR Core API
+    url: https://qr.tuukka.net
+    image_url: https://qr.tuukka.net/png/https://qr.tuukka.net
+    technologies:
+      - "Axum"
+      - "OpenAPI"
+      - "Docker"
+
   - github_repository: tuukkaviitanen/daily-quote-api
     name: Daily Quote API
+    image_url: null
     technologies:
       - "Gin"
       - "SQLite"
       - "OpenAPI"
+      - "Docker"
+
   - github_repository: tuukkaviitanen/mlops-demo
     name: Crypto Predictor (MLOps Demo)
+    image_url: null
     technologies:
       - "Flask"
       - "OpenAPI"
+      - "Docker"
+
   - github_repository: tuukkaviitanen/raspy-monitor
     name: Raspy Monitor
     technologies:
       - "InfluxDB"
       - "Grafana"
-  - github_repository: tuukkaviitanen/qr-code-api
-    name: QR Core API
-    url: https://qr.tuukka.net
+      - "Docker"
+
+  - github_repository: tuukkaviitanen/portfolio-new
+    name: This Portfolio Site
     technologies:
-      - "Axum"
-      - "OpenAPI"
+      - "Next.js"
+      - "React"
+      - "Bun"
+      - "Tailwind CSS"
+      - "Docker"
