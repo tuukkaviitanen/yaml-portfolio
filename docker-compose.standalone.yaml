@@ -1,9 +1,7 @@
-name: bun-portfolio-prod
+name: bun-portfolio-standalone
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
+    image: ghcr.io/tuukkaviitanen/yaml-portfolio:latest
     volumes:
       - ./portfolio.yaml:/app/portfolio.yaml
     environment:
