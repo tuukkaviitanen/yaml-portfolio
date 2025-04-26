@@ -1,5 +1,4 @@
-import { PopulatedConfiguration } from "@/utils/configuration";
-import Image from "next/image";
+import type { PopulatedConfiguration } from "../utils/configuration";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
 
@@ -31,9 +30,8 @@ const Project = ({
       className="project bg-white shadow-md rounded-lg p-6 dark:bg-gray-700 dark:shadow-lg"
     >
       {project.image_url && (
-        <Image
+        <img
           src={project.image_url}
-          alt=""
           height={128}
           width={128}
           className="rounded mb-4 mx-auto"

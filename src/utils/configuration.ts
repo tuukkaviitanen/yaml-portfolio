@@ -208,6 +208,7 @@ const populateConfiguration = async (
     description: configuration.description || github_user_info?.bio,
     image_url: configuration.image_url || github_user_info?.avatar_url,
     name: configuration.name || github_user_info?.name,
+    title: configuration.title || "Portfolio",
   };
 
   return populatedConfiguration;
