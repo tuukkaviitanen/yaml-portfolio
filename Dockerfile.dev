@@ -1,8 +1,8 @@
-FROM oven/bun:1.2.10-slim
+FROM oven/bun:1.2.10-alpine
 
 WORKDIR /app
 
-COPY package.json bun.lock tsconfig.json postcss.config.mjs next.config.ts ./
+COPY package.json bun.lock tsconfig.json ./
 
 RUN bun install --frozen-lockfile
 

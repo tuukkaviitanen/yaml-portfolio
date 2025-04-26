@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { SecondaryTitle, Text } from "./Typography";
 
 type ProfileProps = {
@@ -16,10 +15,9 @@ export default function Profile({
     <div className="profile bg-white shadow-md rounded-lg p-6 mb-8 dark:bg-gray-700 dark:shadow-lg text-center">
       {image_url && (
         <div className="flex justify-center mb-4">
-          <Image
+          <img
             src={image_url}
             height={200}
-            alt=""
             width={200}
             className="rounded-full"
           />

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { PopulatedConfiguration } from "@/utils/configuration";
 import Link from "./Link";
 import { SecondaryTitle } from "./Typography";
@@ -18,9 +17,8 @@ export default function Links({ links }: LinksProps) {
             className="bg-white shadow-md rounded-lg p-4 flex items-center space-x-4 dark:bg-gray-700 dark:shadow-lg"
           >
             {link.icon_url && (
-              <Image
+              <img
                 src={link.icon_url}
-                alt=""
                 height={20}
                 width={20}
                 className="rounded"

@@ -1,8 +1,8 @@
-FROM oven/bun:1.2.10-slim AS builder
+FROM oven/bun:1.2.10-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json bun.lock tsconfig.json postcss.config.mjs next.config.ts ./
+COPY package.json bun.lock tsconfig.json ./
 
 RUN bun install --frozen-lockfile
 
@@ -10,13 +10,10 @@ COPY ./src ./src
 
 RUN bun run build
 
-FROM oven/bun:1.2.10-slim
+FROM oven/bun:1.2.10-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=builder /app/.next/standalone/ ./
+COPY --from=builder /app/dist/index.js ./index.js
 
-COPY postcss.config.mjs ./
-
-CMD [ "bun", "server.js" ]
+CMD [ "bun", "index.js" ]
