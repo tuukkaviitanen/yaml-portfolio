@@ -5,6 +5,7 @@ import { PrimaryTitle } from "./components/Typography";
 import type { PopulatedConfiguration } from "./utils/configuration";
 
 type AppParams = { configuration: PopulatedConfiguration };
+
 const App = ({ configuration }: AppParams) => {
   const { links, projects, description, image_url, name, title } =
     configuration;
@@ -18,7 +19,7 @@ const App = ({ configuration }: AppParams) => {
         <link rel="icon" href={configuration.image_url} />
         <title>{configuration.title}</title>
         {Bun.env.NODE_ENV == "production" ? (
-          <link href="./styles.css" rel="stylesheet" /> // In production, use the compiled CSS
+          <link href="./styles.css" rel="stylesheet" /> // In production, use the built CSS
         ) : (
           <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" /> // In development, use the CDN for Tailwind CSS
         )}
