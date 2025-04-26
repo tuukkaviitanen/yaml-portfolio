@@ -1,4 +1,4 @@
-import { PopulatedConfiguration } from "@/utils/configuration";
+import type { PopulatedConfiguration } from "../utils/configuration";
 import Link from "./Link";
 import { SecondaryTitle } from "./Typography";
 

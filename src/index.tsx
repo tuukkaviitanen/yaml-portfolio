@@ -27,5 +27,10 @@ Bun.serve({
         headers: { "Content-Type": "text/html" },
       });
     },
+    "/styles.css": () => {
+      return new Response(Bun.file("./dist/styles.css"), {
+        headers: { "Content-Type": "text/css" },
+      });
+    },
   },
 });

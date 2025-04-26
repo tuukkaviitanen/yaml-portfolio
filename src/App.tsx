@@ -17,7 +17,11 @@ const App = ({ configuration }: AppParams) => {
         <meta name="author" content={name} />
         <link rel="icon" href={configuration.image_url} />
         <title>{configuration.title}</title>
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        {Bun.env.NODE_ENV == "production" ? (
+          <link href="./styles.css" rel="stylesheet" /> // In production, use the compiled CSS
+        ) : (
+          <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" /> // In development, use the CDN for Tailwind CSS
+        )}
       </head>
       <body className="--font-geist-sans --font-geist-mono antialiased">
         <main className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-800 dark:text-gray-100 x-5">
