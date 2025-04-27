@@ -16,9 +16,10 @@ FROM oven/bun:1.2.10-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/dist/index.js ./index.js
+COPY --from=builder /app/dist/server.js ./server.js
+COPY --from=builder /app/dist/client.js ./dist/client.js
 COPY --from=builder /app/dist/styles.css ./dist/styles.css
 
 ENV NODE_ENV=production
 
-CMD [ "bun", "index.js" ]
+CMD [ "bun", "server.js" ]

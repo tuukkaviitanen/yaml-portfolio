@@ -1,23 +1,105 @@
+import { useEffect, useRef, useState } from "react";
 import type { PopulatedConfiguration } from "../utils/configuration";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 type ProjectsProps = {
   projects: PopulatedConfiguration["projects"];
 };
 
+const filterByAllObjectValues = (object: object, filter: string): boolean => {
+  const filterLower = filter.toLowerCase();
+  return Object.values(object).some((value) => {
+    if (typeof value === "string") {
+      return value.toLowerCase().includes(filterLower);
+    } else if (typeof value === "object") {
+      return filterByAllObjectValues(value, filter);
+    } else if (Array.isArray(value)) {
+      return value.some((item) =>
+        typeof item === "string"
+          ? item.toLowerCase().includes(filterLower)
+          : false
+      );
+    }
+    return false;
+  });
+};
+
 export default function Projects({ projects }: ProjectsProps) {
+  if (!projects?.length) {
+    return null;
+  }
+  const [filter, setFilter] = useState("");
+
+  const filteredProjects = filter
+    ? projects.filter((project) => filterByAllObjectValues(project, filter))
+    : projects; // Don't filter if no filter is set
+
+  // Scroll to the projects section when the filter changes from empty to non-empty
+  const prevFilteredProjectsLength = useRef(filteredProjects.length);
+  useEffect(() => {
+    if (
+      prevFilteredProjectsLength.current === 0 &&
+      filteredProjects.length > 0
+    ) {
+      const element = document.querySelector(".projects");
+      element?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    prevFilteredProjectsLength.current = filteredProjects.length;
+  }, [filteredProjects]);
+
   return (
     <div className="projects mt-8">
-      <h2 className="text-2xl font-semibold mb-4">Projects</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects?.map((project) => (
-          <Project key={project.id} project={project} />
-        ))}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+        <h2 className="text-2xl font-semibold">Projects</h2>
+        <FilterField filter={filter} setFilter={setFilter} />
       </div>
+      {filteredProjects.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProjects.map((project) => (
+            <Project key={project.id} project={project} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center text-center text-gray-500 dark:text-gray-400 text-2xl h-50">
+          No projects matched the filter
+        </div>
+      )}
     </div>
   );
 }
+
+const FilterField = ({
+  filter,
+  setFilter,
+}: {
+  filter: string;
+  setFilter: (value: string) => void;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    /// Update the input value when the input-element's value doesn't match the app state
+    if (inputRef.current?.value && inputRef.current?.value !== filter) {
+      inputRef.current.value = filter;
+    }
+  }, []);
+
+  return (
+    <div className="relative w-full sm:w-96">
+      <input
+        ref={inputRef}
+        className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10 placeholder-gray-700"
+        type="text"
+        placeholder="Filter projects..."
+        value={filter}
+        onChange={(event) => setFilter(event.target.value)}
+      />
+      <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
+    </div>
+  );
+};
 
 const Project = ({
   project,

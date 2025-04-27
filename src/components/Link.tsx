@@ -6,7 +6,8 @@ export default function Link({ url, name }: { url?: string; name?: string }) {
       <a
         target="_blank"
         href={url}
-        className="text-blue-600 hover:underline break-words flex items-center space-x-2 dark:text-blue-400 relative group p-1" rel="noreferrer"
+        className="text-blue-600 hover:underline break-words flex items-center space-x-2 dark:text-blue-400 relative group p-1"
+        rel="noreferrer"
       >
         <div className="flex-1">{name || url}</div>
         <ArrowTopRightOnSquareIcon className="h-4 w-4 flex-none" />
