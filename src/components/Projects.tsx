@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PopulatedConfiguration } from "../utils/configuration";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
@@ -42,11 +42,17 @@ export default function Projects({ projects }: ProjectsProps) {
         <h2 className="text-2xl font-semibold">Projects</h2>
         <FilterField filter={filter} setFilter={setFilter} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project) => (
-          <Project key={project.id} project={project} />
-        ))}
-      </div>
+      {filteredProjects.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProjects.map((project) => (
+            <Project key={project.id} project={project} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center text-center text-gray-500 dark:text-gray-400 text-2xl h-50">
+          No projects matched the filter
+        </div>
+      )}
     </div>
   );
 }
@@ -58,9 +64,19 @@ const FilterField = ({
   filter: string;
   setFilter: (value: string) => void;
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    /// Update the input value when the input-element's value doesn't match the app state
+    if (inputRef.current?.value && inputRef.current?.value !== filter) {
+      inputRef.current.value = filter;
+    }
+  }, []);
+
   return (
     <div className="relative w-full sm:w-96">
       <input
+        ref={inputRef}
         className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10 placeholder-gray-700"
         type="text"
         placeholder="Filter projects..."
