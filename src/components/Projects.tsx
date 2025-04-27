@@ -36,6 +36,19 @@ export default function Projects({ projects }: ProjectsProps) {
     ? projects.filter((project) => filterByAllObjectValues(project, filter))
     : projects; // Don't filter if no filter is set
 
+  // Scroll to the projects section when the filter changes from empty to non-empty
+  const prevFilteredProjectsLength = useRef(filteredProjects.length);
+  useEffect(() => {
+    if (
+      prevFilteredProjectsLength.current === 0 &&
+      filteredProjects.length > 0
+    ) {
+      const element = document.querySelector(".projects");
+      element?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    prevFilteredProjectsLength.current = filteredProjects.length;
+  }, [filteredProjects]);
+
   return (
     <div className="projects mt-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
