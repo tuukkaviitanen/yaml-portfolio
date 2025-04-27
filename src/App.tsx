@@ -19,7 +19,7 @@ const App = ({ configuration }: AppParams) => {
         <link rel="icon" href={configuration.image_url} />
         <title>{configuration.title}</title>
         {Bun.env.NODE_ENV == "production" ? (
-          <link href="./styles.css" rel="stylesheet" /> // In production, use the built CSS
+          <link href="./styles.css" rel="stylesheet" /> // In production, use the compiled and much smaller CSS bundle
         ) : (
           <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" /> // In development, use the CDN for Tailwind CSS
         )}
