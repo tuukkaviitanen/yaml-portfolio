@@ -52,7 +52,6 @@ const populateConfiguration = async (
   configuration: Configuration
 ): Promise<PopulatedConfiguration> => {
   const github_user_url = `https://github.com/${configuration.github_username}`;
-  const github_user_api_url = `https://api.github.com/users/${configuration.github_username}`;
 
   let github_user_info;
   try {
@@ -122,7 +121,6 @@ const populateConfiguration = async (
           languages: project.languages || githubProjectInfo?.languages,
         };
       }) ?? [],
-    github_user_api_url,
     github_user_url,
     description: configuration.description || github_user_info?.bio,
     image_url: configuration.image_url || github_user_info?.avatar_url,
