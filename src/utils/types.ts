@@ -7,18 +7,18 @@ export type Project = z.infer<typeof ProjectSchema>;
 
 export type Configuration = z.infer<typeof ConfigurationSchema>;
 
+export type PopulatedProject = Project & {
+  id: string;
+  github_repository_url?: string;
+  image_url?: string;
+  languages?: Array<string>;
+};
+
 export type PopulatedConfiguration = Omit<
   Configuration,
   "links" | "projects"
 > & {
   links: Array<Link & { id: string }>;
-  projects: Array<
-    Project & {
-      id: string;
-      github_repository_url?: string;
-      image_url?: string;
-      languages?: Array<string>;
-    }
-  >;
+  projects: PopulatedProject[];
   github_user_url?: string;
 };
