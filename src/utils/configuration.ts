@@ -1,10 +1,5 @@
 import { z } from "zod";
-import {
-  ConfigurationFetchingError,
-  ConfigurationFileEmptyError,
-  ConfigurationParsingError,
-  FileReadError,
-} from "./errors";
+import { ConfigurationError } from "./errors";
 import YAML from "yaml";
 
 const LinkSchema = z.object({
@@ -64,7 +59,7 @@ export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
 
   if (!configFileContent) {
-    throw new ConfigurationFileEmptyError();
+    throw new ConfigurationError("Configuration file empty");
   }
 
   const configuration = await parseConfigurationString(configFileContent);
@@ -80,11 +75,9 @@ const getFileContent = async (filePath: string) => {
     const text = await file.text();
     return text;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new FileReadError(`File read error: ${error.message}`);
-    } else {
-      throw new FileReadError("Unknown file read error");
-    }
+    throw new ConfigurationError(`File read error`, {
+      error,
+    });
   }
 };
 
@@ -97,15 +90,9 @@ const parseConfigurationString = async (configurationString: string) => {
 
     return validatedConfiguration;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new ConfigurationParsingError(
-        `Configuration parsing error: ${error.message}`
-      );
-    } else {
-      throw new ConfigurationParsingError(
-        "Unknown configuration parsing error"
-      );
-    }
+    throw new ConfigurationError("Failed parsing configuration", {
+      error,
+    });
   }
 };
 
@@ -231,11 +218,9 @@ const getUserInfo = async (github_username: string) => {
     await Bun.redis.expire(url, 3600);
     return await GitHubUserSchema.parseAsync(userInfo);
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown validation error";
-    throw new ConfigurationFetchingError(
-      `GitHub API User info validation error: ${errorMessage}`
-    );
+    throw new ConfigurationError(`GitHub API User info validation error`, {
+      error,
+    });
   }
 };
 
@@ -268,7 +253,7 @@ const getRepositoryInfo = async (github_repository: string) => {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown validation error";
-    throw new ConfigurationFetchingError(
+    throw new ConfigurationError(
       `GitHub API Repository info validation error: ${errorMessage}`
     );
   }

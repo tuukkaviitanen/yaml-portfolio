@@ -1,21 +1,29 @@
+type ErrorConfig =
+  | {
+      error?: unknown;
+    }
+  | undefined;
+
 export class LoggedError extends Error {
-  constructor(message: string) {
-    console.error(message);
+  sourceError?: Error;
+  constructor(message: string, config?: ErrorConfig) {
     super(message);
+
+    if (config?.error instanceof Error) {
+      this.sourceError = config?.error;
+    }
+    {
+      this.sourceError = new Error(config?.error?.toString());
+    }
+
+    console.error(this.toString());
+  }
+
+  toString() {
+    return `Error occurred: ${
+      this.message
+    },\nWrapped error: ${this.sourceError?.toString()}`;
   }
 }
 
 export class ConfigurationError extends LoggedError {}
-export class UnknownConfigurationError extends ConfigurationError {
-  constructor() {
-    super("Unknown configuration error");
-  }
-}
-export class FileReadError extends ConfigurationError {}
-export class ConfigurationFileEmptyError extends ConfigurationError {
-  constructor() {
-    super("Configuration file is empty");
-  }
-}
-export class ConfigurationParsingError extends ConfigurationError {}
-export class ConfigurationFetchingError extends ConfigurationError {}
