@@ -118,6 +118,8 @@ const Project = ({ project }: { project: PopulatedProject }) => {
     >
       {project.image_url && (
         <img
+          loading="lazy"
+          alt={`Project image for ${project.name}`}
           src={project.image_url}
           height={128}
           width={128}
@@ -126,13 +128,13 @@ const Project = ({ project }: { project: PopulatedProject }) => {
       )}
       <TertiaryTitle>{project.name}</TertiaryTitle>
       <Text>{project.description}</Text>
-      <ul className="space-y-2">
+      <div className="space-y-2">
         <ProjectLink title="Project Page" link={project.url} />
         <ProjectLink
           title="GitHub Repository"
           link={project.github_repository_url}
         />
-      </ul>
+      </div>
       <List title="Languages" list={project.languages} />
       <List title="Technologies" list={project.technologies} />
     </div>

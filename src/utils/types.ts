@@ -14,11 +14,16 @@ export type PopulatedProject = Project & {
   languages?: Array<string>;
 };
 
+export type PopulatedLink = Link & {
+  id: string;
+  icon_url?: string;
+};
+
 export type PopulatedConfiguration = Omit<
   Configuration,
   "links" | "projects"
 > & {
-  links: Array<Link & { id: string }>;
+  links: PopulatedLink[];
   projects: PopulatedProject[];
   github_user_url?: string;
 };

@@ -1,9 +1,9 @@
-import type { PopulatedConfiguration } from "../utils/configuration";
+import type { PopulatedLink } from "../utils/types";
 import Link from "./Link";
 import { SecondaryTitle } from "./Typography";
 
 type LinksProps = {
-  links: PopulatedConfiguration["links"];
+  links: PopulatedLink[];
 };
 
 export default function Links({ links }: LinksProps) {
@@ -18,6 +18,8 @@ export default function Links({ links }: LinksProps) {
           >
             {link.icon_url && (
               <img
+                loading="lazy"
+                alt={`Link icon for ${link.name}`}
                 src={link.icon_url}
                 height={20}
                 width={20}
