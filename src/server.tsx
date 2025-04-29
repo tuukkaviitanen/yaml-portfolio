@@ -1,9 +1,7 @@
 import { renderToReadableStream } from "react-dom/server";
 import App from "./App";
-import {
-  getConfiguration,
-  type PopulatedConfiguration,
-} from "./utils/configuration";
+import { getConfiguration } from "./utils/configuration";
+import type { PopulatedConfiguration } from "./utils/types";
 
 const PORT = Bun.env.PORT || 3000;
 const CONFIG_FILE_PATH = Bun.env.CONFIG_FILE_PATH || "./portfolio.yaml";

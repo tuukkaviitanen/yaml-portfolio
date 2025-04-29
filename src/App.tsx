@@ -2,7 +2,7 @@ import Links from "./components/Links";
 import Profile from "./components/Profile";
 import Projects from "./components/Projects";
 import { PrimaryTitle } from "./components/Typography";
-import type { PopulatedConfiguration } from "./utils/configuration";
+import type { PopulatedConfiguration } from "./utils/types";
 
 type AppParams = { configuration: PopulatedConfiguration };
 
