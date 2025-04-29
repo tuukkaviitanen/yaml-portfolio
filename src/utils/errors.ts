@@ -11,18 +11,18 @@ export class LoggedError extends Error {
 
     if (config?.error instanceof Error) {
       this.sourceError = config?.error;
-    }
-    {
-      this.sourceError = new Error(config?.error?.toString());
+    } else if (config?.error) {
+      this.sourceError = new Error(config?.error.toString());
     }
 
     console.error(this.toString());
   }
 
   toString() {
-    return `Error occurred: ${
-      this.message
-    },\nWrapped error: ${this.sourceError?.toString()}`;
+    const wrappedError = `,\nWrapped error: ${this.sourceError?.toString()}`;
+    return `Error occurred: ${this.message}${
+      this.sourceError ? wrappedError : ""
+    }`;
   }
 }
 

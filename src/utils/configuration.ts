@@ -59,7 +59,7 @@ export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
 
   if (!configFileContent) {
-    throw new ConfigurationError("Configuration file empty");
+    throw new ConfigurationError(`Configuration file at "${filePath}" empty`);
   }
 
   const configuration = await parseConfigurationString(configFileContent);
@@ -75,7 +75,7 @@ const getFileContent = async (filePath: string) => {
     const text = await file.text();
     return text;
   } catch (error) {
-    throw new ConfigurationError(`File read error`, {
+    throw new ConfigurationError(`Failed reading file "${filePath}"`, {
       error,
     });
   }
@@ -105,7 +105,6 @@ export type PopulatedConfiguration = Omit<
     Project & {
       id: string;
       github_repository_url?: string;
-      github_repository_api_url?: string;
       image_url?: string;
       languages?: Array<string>;
     }
@@ -180,9 +179,6 @@ const populateConfiguration = async (
           github_repository_url:
             project.github_repository &&
             `https://github.com/${project.github_repository}`,
-          github_repository_api_url:
-            project.github_repository &&
-            `https://api.github.com/repos/${project.github_repository}`,
           image_url,
           name: project.name || githubProjectInfo?.name,
           description: project.description || githubProjectInfo?.description,
@@ -211,16 +207,19 @@ const getUserInfo = async (github_username: string) => {
     }
     const response = await Bun.fetch(url);
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new ConfigurationError(`HTTP error! Status: ${response.status}`);
     }
     const userInfo = await response.json();
     await Bun.redis.set(url, JSON.stringify(userInfo));
     await Bun.redis.expire(url, 3600);
     return await GitHubUserSchema.parseAsync(userInfo);
   } catch (error) {
-    throw new ConfigurationError(`GitHub API User info validation error`, {
-      error,
-    });
+    throw new ConfigurationError(
+      `Failed fetching GitHub user info for ${github_username}`,
+      {
+        error,
+      }
+    );
   }
 };
 
@@ -234,14 +233,14 @@ const getRepositoryInfo = async (github_repository: string) => {
     }
     const response = await Bun.fetch(url);
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new ConfigurationError(`HTTP error! Status: ${response.status}`);
     }
     const repositoryInfo = await response.json();
 
     if (repositoryInfo.languages_url) {
       const response = await Bun.fetch(repositoryInfo?.languages_url);
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new ConfigurationError(`HTTP error! Status: ${response.status}`);
       }
       const languages = await response.json();
       repositoryInfo.languages = Object.keys(languages);
@@ -251,10 +250,9 @@ const getRepositoryInfo = async (github_repository: string) => {
     await Bun.redis.expire(url, 3600);
     return await GitHubRepositorySchema.parseAsync(repositoryInfo);
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown validation error";
     throw new ConfigurationError(
-      `GitHub API Repository info validation error: ${errorMessage}`
+      `Failed fetching repository info for ${github_repository}`,
+      { error }
     );
   }
 };
