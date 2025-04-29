@@ -1,29 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import type { PopulatedConfiguration } from "../utils/configuration";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
+
+const doesProjectMatchFilter = (
+  project: PopulatedProject,
+  filter: string
+): boolean => {
+  const filterLower = filter.toLowerCase();
+
+  const filteredFields = [
+    project.name,
+    project.description,
+    project.github_repository_url,
+    project.url,
+    project.github_repository,
+    project.languages,
+    project.technologies,
+  ];
+
+  const hasFoundMatch = filteredFields.some((field) => {
+    if (Array.isArray(field)) {
+      return field.some((item) => item.toLowerCase().includes(filterLower));
+    } else {
+      return field?.toLowerCase().includes(filterLower);
+    }
+  });
+
+  return hasFoundMatch;
+};
 
 type ProjectsProps = {
   projects: PopulatedConfiguration["projects"];
-};
-
-const filterByAllObjectValues = (object: object, filter: string): boolean => {
-  const filterLower = filter.toLowerCase();
-  return Object.values(object).some((value) => {
-    if (typeof value === "string") {
-      return value.toLowerCase().includes(filterLower);
-    } else if (typeof value === "object") {
-      return filterByAllObjectValues(value, filter);
-    } else if (Array.isArray(value)) {
-      return value.some((item) =>
-        typeof item === "string"
-          ? item.toLowerCase().includes(filterLower)
-          : false
-      );
-    }
-    return false;
-  });
 };
 
 export default function Projects({ projects }: ProjectsProps) {
@@ -33,7 +42,7 @@ export default function Projects({ projects }: ProjectsProps) {
   const [filter, setFilter] = useState("");
 
   const filteredProjects = filter
-    ? projects.filter((project) => filterByAllObjectValues(project, filter))
+    ? projects.filter((project) => doesProjectMatchFilter(project, filter))
     : projects; // Don't filter if no filter is set
 
   // Scroll to the projects section when the filter changes from empty to non-empty
@@ -101,11 +110,7 @@ const FilterField = ({
   );
 };
 
-const Project = ({
-  project,
-}: {
-  project: PopulatedConfiguration["projects"][0];
-}) => {
+const Project = ({ project }: { project: PopulatedProject }) => {
   return (
     <div
       key={project.id}
