@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import type { PopulatedConfiguration } from "../utils/configuration";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import type { PopulatedConfiguration } from "../utils/types";
 
 type ProjectsProps = {
   projects: PopulatedConfiguration["projects"];

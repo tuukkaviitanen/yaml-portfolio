@@ -1,59 +1,11 @@
-import { z } from "zod";
 import { ConfigurationError } from "./errors";
 import YAML from "yaml";
-
-const LinkSchema = z.object({
-  name: z.string(),
-  url: z.string().url(),
-  icon_url: z.string().url().optional(),
-});
-
-type Link = z.infer<typeof LinkSchema>;
-
-const ProjectSchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  url: z.string().url().optional(),
-  github_repository: z.string().optional(),
-  image_url: z.string().url().optional().nullable(),
-  languages: z.array(z.string()).optional(),
-  technologies: z.array(z.string()).optional(),
-});
-
-type Project = z.infer<typeof ProjectSchema>;
-
-const ConfigurationSchema = z.object({
-  name: z.string().optional(),
-  title: z.string().optional(),
-  description: z.string().optional(),
-  image_url: z.string().url().optional(),
-  github_username: z.string(),
-  links: z.array(LinkSchema).optional(),
-  projects: z.array(ProjectSchema).optional(),
-});
-
-const GitHubUserSchema = z.object({
-  avatar_url: z.string().url(),
-  url: z.string().url(),
-  html_url: z.string().url(),
-  name: z.string(),
-  location: z.string(),
-  bio: z.string(),
-});
-
-const GitHubRepositorySchema = z.object({
-  name: z.string(),
-  html_url: z.string().url(),
-  description: z.string().optional(),
-  languages_url: z.string().url(),
-  created_at: z.string(),
-  updated_at: z.string(),
-  language: z.string().optional(),
-  homepage: z.string().nullable(),
-  languages: z.array(z.string()).optional(),
-});
-
-export type Configuration = z.infer<typeof ConfigurationSchema>;
+import {
+  ConfigurationSchema,
+  GitHubRepositorySchema,
+  GitHubUserSchema,
+} from "./schemas";
+import type { Configuration, PopulatedConfiguration } from "./types";
 
 export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
@@ -94,22 +46,6 @@ const parseConfigurationString = async (configurationString: string) => {
       error,
     });
   }
-};
-
-export type PopulatedConfiguration = Omit<
-  Configuration,
-  "links" | "projects"
-> & {
-  links: Array<Link & { id: string }>;
-  projects: Array<
-    Project & {
-      id: string;
-      github_repository_url?: string;
-      image_url?: string;
-      languages?: Array<string>;
-    }
-  >;
-  github_user_url?: string;
 };
 
 const populateConfiguration = async (
