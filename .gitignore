@@ -43,3 +43,5 @@ next-env.d.ts
 portfolio.yaml
 
 dist
+
+.direnv
