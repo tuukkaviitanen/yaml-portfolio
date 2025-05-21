@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
     bun-pkgs = {
-      url = "github:NixOS/nixpkgs/507b63021ada5fee621b6ca371c4fca9ca46f52c";
+      url = "github:NixOS/nixpkgs/507b63021ada5fee621b6ca371c4fca9ca46f52c"; # has Bun 1.2.10
       flake = false;
     };
   };
