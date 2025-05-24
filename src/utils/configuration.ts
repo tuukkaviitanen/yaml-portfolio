@@ -6,6 +6,7 @@ import {
   GitHubUserSchema,
 } from "./schemas";
 import type { Configuration, PopulatedConfiguration } from "./types";
+import cache from "./cache";
 
 export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
@@ -134,7 +135,7 @@ const populateConfiguration = async (
 const getUserInfo = async (github_username: string) => {
   const url = `https://api.github.com/users/${github_username}`;
   try {
-    const cachedUserInfo = await Bun.redis.get(url);
+    const cachedUserInfo = await cache.fetch(url);
     if (cachedUserInfo) {
       const parsedUserInfo = JSON.parse(cachedUserInfo);
       return await GitHubUserSchema.parseAsync(parsedUserInfo);
@@ -144,8 +145,7 @@ const getUserInfo = async (github_username: string) => {
       throw new ConfigurationError(`HTTP error! Status: ${response.status}`);
     }
     const userInfo = await response.json();
-    await Bun.redis.set(url, JSON.stringify(userInfo));
-    await Bun.redis.expire(url, 3600);
+    await cache.store(url, userInfo);
     return await GitHubUserSchema.parseAsync(userInfo);
   } catch (error) {
     throw new ConfigurationError(
@@ -160,7 +160,7 @@ const getUserInfo = async (github_username: string) => {
 const getRepositoryInfo = async (github_repository: string) => {
   const url = `https://api.github.com/repos/${github_repository}`;
   try {
-    const cachedRepositoryInfo = await Bun.redis.get(url);
+    const cachedRepositoryInfo = await cache.fetch(url);
     if (cachedRepositoryInfo) {
       const parsedRepositoryInfo = JSON.parse(cachedRepositoryInfo);
       return await GitHubRepositorySchema.parseAsync(parsedRepositoryInfo);
@@ -180,8 +180,7 @@ const getRepositoryInfo = async (github_repository: string) => {
       repositoryInfo.languages = Object.keys(languages);
     }
 
-    await Bun.redis.set(url, JSON.stringify(repositoryInfo));
-    await Bun.redis.expire(url, 3600);
+    await cache.store(url, JSON.stringify(repositoryInfo));
     return await GitHubRepositorySchema.parseAsync(repositoryInfo);
   } catch (error) {
     throw new ConfigurationError(
