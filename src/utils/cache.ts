@@ -8,14 +8,25 @@ class Cache {
     }
 
     async store(key: string, value: any) {
-        const encodedValue = JSON.stringify(value)
-        await this.client.set(key, encodedValue);
-        await this.client.expire(key, 3600);
+        try {
+            const encodedValue = JSON.stringify(value)
+            await this.client.set(key, encodedValue);
+            await this.client.expire(key, 3600);
+        } catch (error) {
+            console.error("Failed storing to Redis", { error })
+        }
+
     }
 
     async fetch(key: string) {
-        const encodedValue = await this.client.get(key);
-        return encodedValue && JSON.parse(encodedValue);
+        try {
+            const encodedValue = await this.client.get(key);
+            return encodedValue && JSON.parse(encodedValue);
+        } catch (error) {
+            console.error("Failed fetching from Redis", { error })
+            return null;
+        }
+
     }
 
     async initialize() {
