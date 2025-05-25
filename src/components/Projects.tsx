@@ -99,7 +99,7 @@ const FilterField = ({
     <div className="relative w-full sm:w-96">
       <input
         ref={inputRef}
-        className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10 placeholder-gray-700"
+        className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-primary leading-tight focus:outline-none focus:ring-2 focus:ring-accent focus:border-blue pr-10 placeholder-primary/70"
         type="text"
         placeholder="Filter projects..."
         value={filter}
@@ -114,7 +114,7 @@ const Project = ({ project }: { project: PopulatedProject }) => {
   return (
     <div
       key={project.id}
-      className="project bg-white shadow-md rounded-lg p-6 dark:bg-gray-700 dark:shadow-lg"
+      className="project bg-white shadow-md rounded-lg p-6 dark:bg-secondary dark:shadow-lg"
     >
       {project.image_url && (
         <img
@@ -157,9 +157,9 @@ const List = ({ title, list }: { title: string; list?: string[] }) =>
         {list?.map((item) => (
           <li
             key={item}
-            className="bg-gray-200 dark:bg-gray-600 text-sm px-3 py-1 rounded-full"
+            className="bg-accent/20 dark:bg-accent text-sm px-3 py-1 rounded-full"
           >
-            <span className="text-gray-800 dark:text-gray-200">{item}</span>
+            <span className="dark:text-white/90">{item}</span>
           </li>
         ))}
       </ul>
