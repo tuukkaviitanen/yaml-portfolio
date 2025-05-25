@@ -32,21 +32,15 @@ const doesProjectMatchFilter = (
   return hasFoundMatch;
 };
 
-const getMostCommonTags = (projects: PopulatedProject[], numberOfTags: number) => {
+const suffleArray = (array: Array<any>) => array.map(item => ({item, sort: Math.random()})).sort((a, b) => a.sort - b.sort).map(({item}) => item)
+
+const getSuffledTags = (projects: PopulatedProject[], numberOfTags: number) => {
   const allTags = projects.flatMap((project) => [...project.languages ?? [], ...project.technologies ?? []])
+  const suffledTags = suffleArray(allTags)
+  const uniqueTags = Array.from(new Set(suffledTags))
+  // Filter unique tags only after suffling, so tags with higher occurances have higher change of showing up
 
-  const tagOccurances = new Map<string, number>();
-
-  allTags.forEach((tag) => {
-    const currentValue = tagOccurances.get(tag) ?? 0;
-    tagOccurances.set(tag, currentValue + 1);
-  })
-
-  const tagTuplesSortedByOccurances = Array.from(tagOccurances).toSorted(([_a, aOccurances], [_b, bOccurances]) => bOccurances - aOccurances)
-
-  const tagsSortedByOccurances = tagTuplesSortedByOccurances.map(([tag]) => tag)
-
-  return tagsSortedByOccurances.slice(undefined, numberOfTags)
+  return uniqueTags.slice(undefined, numberOfTags)
 }
 
 type ProjectsProps = {
@@ -58,7 +52,8 @@ export default function Projects({ projects }: ProjectsProps) {
     return null;
   }
   const { filter, setFilter } = useStore();
-  const [popularTags] = useState(getMostCommonTags(projects, 5));
+   // Get tags only on first render
+  const [popularTags] = useState(getSuffledTags(projects, 5));
 
   const filteredProjects = filter
     ? projects.filter((project) => doesProjectMatchFilter(project, filter))
