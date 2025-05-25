@@ -12,7 +12,7 @@ export default function Profile({
   description,
 }: ProfileProps) {
   return (
-    <div className="profile bg-white shadow-md rounded-lg p-6 mb-8 dark:bg-secondary dark:shadow-lg text-center">
+    <div className="profile bg-white shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg p-6 mb-8 dark:bg-secondary text-center">
       {image_url && (
         <div className="flex justify-center mb-4">
           <img

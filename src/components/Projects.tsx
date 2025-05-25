@@ -32,6 +32,23 @@ const doesProjectMatchFilter = (
   return hasFoundMatch;
 };
 
+const getMostCommonTags = (projects: PopulatedProject[], numberOfTags: number) => {
+  const allTags = projects.flatMap((project) => [...project.languages ?? [], ...project.technologies ?? []])
+
+  const tagOccurances = new Map<string, number>();
+
+  allTags.forEach((tag) => {
+    const currentValue = tagOccurances.get(tag) ?? 0;
+    tagOccurances.set(tag, currentValue + 1);
+  })
+
+  const tagTuplesSortedByOccurances = Array.from(tagOccurances).toSorted(([_a, aOccurances], [_b, bOccurances]) => bOccurances - aOccurances)
+
+  const tagsSortedByOccurances = tagTuplesSortedByOccurances.map(([tag]) => tag)
+
+  return tagsSortedByOccurances.slice(undefined, numberOfTags)
+}
+
 type ProjectsProps = {
   projects: PopulatedConfiguration["projects"];
 };
@@ -40,7 +57,8 @@ export default function Projects({ projects }: ProjectsProps) {
   if (!projects?.length) {
     return null;
   }
-  const {filter, setFilter} = useStore();
+  const { filter, setFilter } = useStore();
+  const [popularTags] = useState(getMostCommonTags(projects, 5));
 
   const filteredProjects = filter
     ? projects.filter((project) => doesProjectMatchFilter(project, filter))
@@ -63,6 +81,7 @@ export default function Projects({ projects }: ProjectsProps) {
     <div className="projects mt-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <h2 className="text-2xl font-semibold">Projects</h2>
+        <Chips list={popularTags} />
         <FilterField filter={filter} setFilter={setFilter} />
       </div>
       {filteredProjects.length > 0 ? (
@@ -97,7 +116,7 @@ const FilterField = ({
   }, []);
 
   return (
-    <div className="relative w-full sm:w-96">
+    <div className="relative w-full sm:w-96  hover:shadow-2xl transition-all duration-300 ease-in-out">
       <input
         ref={inputRef}
         className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-primary leading-tight focus:outline-none focus:ring-2 focus:ring-accent focus:border-blue pr-10 placeholder-primary/70"
@@ -136,8 +155,8 @@ const Project = ({ project }: { project: PopulatedProject }) => {
           link={project.github_repository_url}
         />
       </div>
-      <List title="Languages" list={project.languages} />
-      <List title="Technologies" list={project.technologies} />
+      <TagList title="Languages" list={project.languages} />
+      <TagList title="Technologies" list={project.technologies} />
     </div>
   );
 };
@@ -150,23 +169,30 @@ const ProjectLink = ({ title, link }: { title: string; link?: string }) =>
     </>
   );
 
-const List = ({ title, list }: { title: string; list?: string[]; }) => {
-  const {setFilter} = useStore();
+const TagList = ({ title, list }: { title: string; list?: string[]; }) => {
 
   return list?.length && (
-    <>
+    <div className="flex flex-col gap-2">
       <QuaternaryTitle>{title}</QuaternaryTitle>
-      <ul className="flex flex-wrap gap-2 mt-4">
-        {list?.map((item) => (
-          <li
-            key={item}
-            className="bg-accent/20 dark:bg-accent text-sm px-3 py-1 rounded-full hover:cursor-pointer hover:shadow-2xl hover:bg-accent/80 hover:text-white transition-all duration-300 ease-in-out"
-            onClick={() => setFilter(item)}
-          >
-            <span className="dark:text-white/90">{item}</span>
-          </li>
-        ))}
-      </ul>
-    </>
+      <Chips list={list} />
+    </div>
   );
+}
+
+const Chips = ({ list }: { list: string[]; }) => {
+  const { setFilter } = useStore();
+
+  return (
+    <ul className="flex flex-wrap gap-2 justify-center">
+      {list?.map((item) => (
+        <li
+          key={item}
+          className="bg-accent/20 dark:bg-accent text-sm px-3 py-1 rounded-full hover:cursor-pointer hover:shadow-2xl hover:bg-accent/80 hover:text-white transition-all duration-300 ease-in-out"
+          onClick={() => setFilter(item)}
+        >
+          <span className="dark:text-white/90">{item}</span>
+        </li>
+      ))}
+    </ul>
+  )
 }
