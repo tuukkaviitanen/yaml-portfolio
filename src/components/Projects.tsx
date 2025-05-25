@@ -3,6 +3,7 @@ import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
+import useStore from "../hooks/useStore";
 
 const doesProjectMatchFilter = (
   project: PopulatedProject,
@@ -39,7 +40,7 @@ export default function Projects({ projects }: ProjectsProps) {
   if (!projects?.length) {
     return null;
   }
-  const [filter, setFilter] = useState("");
+  const {filter, setFilter} = useStore();
 
   const filteredProjects = filter
     ? projects.filter((project) => doesProjectMatchFilter(project, filter))
@@ -114,7 +115,7 @@ const Project = ({ project }: { project: PopulatedProject }) => {
   return (
     <div
       key={project.id}
-      className="project bg-white shadow-md rounded-lg p-6 dark:bg-secondary dark:shadow-lg"
+      className="project bg-white shadow-md rounded-lg p-6 dark:bg-secondary dark:shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out"
     >
       {project.image_url && (
         <img
@@ -149,15 +150,18 @@ const ProjectLink = ({ title, link }: { title: string; link?: string }) =>
     </>
   );
 
-const List = ({ title, list }: { title: string; list?: string[] }) =>
-  list?.length && (
+const List = ({ title, list }: { title: string; list?: string[]; }) => {
+  const {setFilter} = useStore();
+
+  return list?.length && (
     <>
       <QuaternaryTitle>{title}</QuaternaryTitle>
       <ul className="flex flex-wrap gap-2 mt-4">
         {list?.map((item) => (
           <li
             key={item}
-            className="bg-accent/20 dark:bg-accent text-sm px-3 py-1 rounded-full"
+            className="bg-accent/20 dark:bg-accent text-sm px-3 py-1 rounded-full hover:cursor-pointer hover:shadow-2xl hover:bg-accent/80 hover:text-white transition-all duration-300 ease-in-out"
+            onClick={() => setFilter(item)}
           >
             <span className="dark:text-white/90">{item}</span>
           </li>
@@ -165,3 +169,4 @@ const List = ({ title, list }: { title: string; list?: string[] }) =>
       </ul>
     </>
   );
+}
