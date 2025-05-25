@@ -15,7 +15,6 @@ class Cache {
         } catch (error) {
             console.error("Failed storing to Redis", { error })
         }
-
     }
 
     async fetch(key: string) {
@@ -26,7 +25,6 @@ class Cache {
             console.error("Failed fetching from Redis", { error })
             return null;
         }
-
     }
 
     async initialize() {
