@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
 import useStore from "../hooks/useStore";
 import seedrandom from "seedrandom";
@@ -137,12 +137,13 @@ const FilterField = ({
     <div className="relative w-full sm:w-96  hover:shadow-2xl transition-all duration-300 ease-in-out">
       <input
         ref={inputRef}
-        className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-primary leading-tight focus:outline-none focus:ring-2 focus:ring-accent focus:border-blue pr-10 placeholder-primary/70"
+        className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-primary leading-tight focus:outline-none focus:ring-2 focus:ring-accent focus:border-blue pr-17 placeholder-primary/70"
         type="text"
         placeholder="Filter projects..."
         value={filter}
         onChange={(event) => setFilter(event.target.value)}
       />
+      <button onClick={() => setFilter("")} className="hover:cursor-pointer"><XMarkIcon className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" /></button>
       <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
     </div>
   );
