@@ -23,6 +23,7 @@ export default defineConfig([
     rules: {
       ...pluginReact.configs.flat.recommended.rules,
       "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/no-explicit-any": "off"
     },
     settings: {
       react: {

@@ -17,5 +17,5 @@ export const QuaternaryTitle = ({
 }) => <h4 className="text-lg font-semibold mt-4">{children}</h4>;
 
 export const Text = ({ children }: { children: React.ReactNode }) => (
-  <p className="text-gray-700 dark:text-gray-400">{children}</p>
+  <p className="text-primary/80 dark:text-white/70">{children}</p>
 );

@@ -20,9 +20,9 @@ const App = ({ configuration }: AppParams) => {
         <title>{configuration.title}</title>
         <link href="./styles.css" rel="stylesheet" />
       </head>
-      <body className="--font-geist-sans --font-geist-mono antialiased">
-        <main className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-800 dark:text-gray-100 x-5">
-          <header className="bg-gray-900 text-white py-4 dark:bg-gray-700">
+      <body className="--font-geist-sans --font-geist-mono antialiased text-primary dark:text-white selection:bg-accent/90 selection:text-white/90">
+        <main className="min-h-screen bg-gray-50 dark:bg-primary x-5">
+          <header className="bg-primary text-white py-4 dark:bg-secondary">
             <PrimaryTitle>{title}</PrimaryTitle>
           </header>
           <div className="container mx-auto p-6">
