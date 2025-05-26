@@ -76,7 +76,7 @@ export default function Projects({ projects }: ProjectsProps) {
   }
   const { filter, setFilter } = useStore();
   // Get tags only on first render
-  const [popularTags] = useState(getSuffledTags(projects, 5));
+  const [popularTags] = useState(getShuffledTags(projects, 5));
 
   const filteredProjects = filter
     ? projects.filter((project) => doesProjectMatchFilter(project, filter))
