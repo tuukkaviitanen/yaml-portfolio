@@ -63,7 +63,7 @@ const getSuffledTags = (projects: PopulatedProject[], numberOfTags: number) => {
   const uniqueTags = Array.from(new Set(suffledTags));
   // Filter unique tags only after suffling, so tags with higher occurances have higher change of showing up
 
-  return uniqueTags.slice(undefined, numberOfTags);
+  return uniqueTags.slice(0, numberOfTags);
 };
 
 type ProjectsProps = {
