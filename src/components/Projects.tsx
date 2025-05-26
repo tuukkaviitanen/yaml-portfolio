@@ -4,6 +4,7 @@ import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
 import useStore from "../hooks/useStore";
+import seedrandom from "seedrandom";
 
 const doesProjectMatchFilter = (
   project: PopulatedProject,
@@ -32,16 +33,38 @@ const doesProjectMatchFilter = (
   return hasFoundMatch;
 };
 
-const suffleArray = (array: Array<any>) => array.map(item => ({item, sort: Math.random()})).sort((a, b) => a.sort - b.sort).map(({item}) => item)
+/**
+ * @returns Seed for the last hour
+ */
+const getSeed = () => {
+  const now = new Date();
+
+  const lastHour = new Date(now);
+  lastHour.setMinutes(0);
+  lastHour.setSeconds(0);
+  lastHour.setMilliseconds(0);
+
+  const seed = lastHour.toISOString();
+  return seed;
+};
+
+const suffleArray = (array: Array<any>, randomGenerator: seedrandom.PRNG) =>
+  array
+    .map((item) => ({ item, sort: randomGenerator() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ item }) => item);
 
 const getSuffledTags = (projects: PopulatedProject[], numberOfTags: number) => {
-  const allTags = projects.flatMap((project) => [...project.languages ?? [], ...project.technologies ?? []])
-  const suffledTags = suffleArray(allTags)
-  const uniqueTags = Array.from(new Set(suffledTags))
+  const allTags = projects.flatMap((project) => [
+    ...(project.languages ?? []),
+    ...(project.technologies ?? []),
+  ]);
+  const suffledTags = suffleArray(allTags, seedrandom(getSeed()));
+  const uniqueTags = Array.from(new Set(suffledTags));
   // Filter unique tags only after suffling, so tags with higher occurances have higher change of showing up
 
-  return uniqueTags.slice(undefined, numberOfTags)
-}
+  return uniqueTags.slice(undefined, numberOfTags);
+};
 
 type ProjectsProps = {
   projects: PopulatedConfiguration["projects"];
@@ -52,7 +75,7 @@ export default function Projects({ projects }: ProjectsProps) {
     return null;
   }
   const { filter, setFilter } = useStore();
-   // Get tags only on first render
+  // Get tags only on first render
   const [popularTags] = useState(getSuffledTags(projects, 5));
 
   const filteredProjects = filter
@@ -164,17 +187,18 @@ const ProjectLink = ({ title, link }: { title: string; link?: string }) =>
     </>
   );
 
-const TagList = ({ title, list }: { title: string; list?: string[]; }) => {
-
-  return list?.length && (
-    <div className="flex flex-col gap-2">
-      <QuaternaryTitle>{title}</QuaternaryTitle>
-      <Chips list={list} />
-    </div>
+const TagList = ({ title, list }: { title: string; list?: string[] }) => {
+  return (
+    list?.length && (
+      <div className="flex flex-col gap-2">
+        <QuaternaryTitle>{title}</QuaternaryTitle>
+        <Chips list={list} />
+      </div>
+    )
   );
-}
+};
 
-const Chips = ({ list }: { list: string[]; }) => {
+const Chips = ({ list }: { list: string[] }) => {
   const { setFilter } = useStore();
 
   return (
@@ -189,5 +213,5 @@ const Chips = ({ list }: { list: string[]; }) => {
         </li>
       ))}
     </ul>
-  )
-}
+  );
+};
