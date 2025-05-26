@@ -28,7 +28,7 @@ class Cache {
     }
 
     async initialize() {
-        this.client.connect();
+        await this.client.connect();
     }
 }
 
