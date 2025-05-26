@@ -137,7 +137,7 @@ const FilterField = ({
     <div className="relative w-full sm:w-96  hover:shadow-2xl transition-all duration-300 ease-in-out">
       <input
         ref={inputRef}
-        className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-primary leading-tight focus:outline-none focus:ring-2 focus:ring-accent focus:border-blue pr-17 placeholder-primary/70"
+        className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-primary leading-tight pr-17 placeholder-primary/70"
         type="text"
         placeholder="Filter projects..."
         value={filter}
