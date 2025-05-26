@@ -48,20 +48,20 @@ const getSeed = () => {
   return seed;
 };
 
-const suffleArray = (array: Array<any>, randomGenerator: seedrandom.PRNG) =>
+const shuffleArray = (array: Array<any>, randomGenerator: seedrandom.PRNG) =>
   array
     .map((item) => ({ item, sort: randomGenerator() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ item }) => item);
 
-const getSuffledTags = (projects: PopulatedProject[], numberOfTags: number) => {
+const getShuffledTags = (projects: PopulatedProject[], numberOfTags: number) => {
   const allTags = projects.flatMap((project) => [
     ...(project.languages ?? []),
     ...(project.technologies ?? []),
   ]);
-  const suffledTags = suffleArray(allTags, seedrandom(getSeed()));
-  const uniqueTags = Array.from(new Set(suffledTags));
-  // Filter unique tags only after suffling, so tags with higher occurances have higher change of showing up
+  const shuffledTags = shuffleArray(allTags, seedrandom(getSeed()));
+  const uniqueTags = Array.from(new Set(shuffledTags));
+  // Filter unique tags only after shuffling, so tags with higher occurrences have higher chance of showing up
 
   return uniqueTags.slice(0, numberOfTags);
 };
