@@ -54,7 +54,10 @@ const shuffleArray = (array: Array<any>, randomGenerator: seedrandom.PRNG) =>
     .sort((a, b) => a.sort - b.sort)
     .map(({ item }) => item);
 
-const getShuffledTags = (projects: PopulatedProject[], numberOfTags: number) => {
+const getShuffledTags = (
+  projects: PopulatedProject[],
+  numberOfTags: number
+) => {
   const allTags = projects.flatMap((project) => [
     ...(project.languages ?? []),
     ...(project.technologies ?? []),
@@ -84,7 +87,8 @@ export default function Projects({ projects }: ProjectsProps) {
     : projects; // Don't filter if no filter is set
 
   useEffect(() => {
-    if(isFirstRender.current) { // Don't scroll on first render
+    // Don't scroll on first render
+    if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
@@ -96,8 +100,10 @@ export default function Projects({ projects }: ProjectsProps) {
     <div className="projects mt-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <h2 className="text-2xl font-semibold">Projects</h2>
-        <Chips list={popularTags} />
-        <FilterField filter={filter} setFilter={setFilter} />
+        <div className="px-4 py-2 bg-secondary rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <Chips list={popularTags} />
+          <FilterField filter={filter} setFilter={setFilter} />
+        </div>
       </div>
       {filteredProjects.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -140,7 +146,9 @@ const FilterField = ({
         value={filter}
         onChange={(event) => setFilter(event.target.value)}
       />
-      <button onClick={() => setFilter("")} className="hover:cursor-pointer"><XMarkIcon className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" /></button>
+      <button onClick={() => setFilter("")} className="hover:cursor-pointer">
+        <XMarkIcon className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
+      </button>
       <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
     </div>
   );
@@ -204,7 +212,7 @@ const Chips = ({ list }: { list: string[] }) => {
       {list?.map((item) => (
         <li
           key={item}
-          className="bg-accent/20 dark:bg-accent text-sm px-3 py-1 rounded-full hover:cursor-pointer hover:shadow-2xl hover:bg-accent/80 hover:text-white transition-all duration-300 ease-in-out"
+          className="bg-accent/20 dark:bg-accent text-sm px-4 py-2 rounded-full hover:cursor-pointer hover:shadow-2xl hover:bg-accent/80 hover:text-white transition-all duration-300 ease-in-out"
           onClick={() => setFilter(item)}
         >
           <span className="dark:text-white/90">{item}</span>
