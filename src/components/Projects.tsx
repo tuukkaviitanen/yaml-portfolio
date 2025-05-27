@@ -77,22 +77,19 @@ export default function Projects({ projects }: ProjectsProps) {
   const { filter, setFilter } = useStore();
   // Get tags only on first render
   const [popularTags] = useState(getShuffledTags(projects, 5));
+  const isFirstRender = useRef(true);
 
   const filteredProjects = filter
     ? projects.filter((project) => doesProjectMatchFilter(project, filter))
     : projects; // Don't filter if no filter is set
 
-  // Scroll to the projects section when the filter changes from empty to non-empty
-  const prevFilteredProjectsLength = useRef(filteredProjects.length);
   useEffect(() => {
-    if (
-      prevFilteredProjectsLength.current === 0 &&
-      filteredProjects.length > 0
-    ) {
-      const element = document.querySelector(".projects");
-      element?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if(isFirstRender.current) { // Don't scroll on first render
+      isFirstRender.current = false;
+      return;
     }
-    prevFilteredProjectsLength.current = filteredProjects.length;
+    const element = document.querySelector(".projects");
+    element?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [filteredProjects]);
 
   return (
