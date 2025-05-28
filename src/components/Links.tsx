@@ -10,7 +10,7 @@ export default function Links({ links }: LinksProps) {
   return (
     <>
       <SecondaryTitle>Links</SecondaryTitle>
-      <ul className="links grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <ul className="links grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {links?.map((link) => (
           <li
             key={link.id}
