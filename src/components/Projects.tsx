@@ -98,9 +98,9 @@ export default function Projects({ projects }: ProjectsProps) {
 
   return (
     <div className="projects mt-8">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4">
         <h2 className="text-2xl font-semibold">Projects</h2>
-        <div className="px-4 py-2 bg-white dark:bg-secondary rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out">
+        <div className="px-4 py-2 bg-white dark:bg-secondary rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-3 shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out">
           <Chips list={popularTags} />
           <FilterField filter={filter} setFilter={setFilter} />
         </div>
@@ -137,7 +137,7 @@ const FilterField = ({
   }, []);
 
   return (
-    <div className="relative w-full sm:w-96 hover:shadow-2xl transition-all duration-300 ease-in-out">
+    <div className="relative w-full md:w-96 hover:shadow-2xl transition-all duration-300 ease-in-out">
       <input
         ref={inputRef}
         className="shadow appearance-none border rounded w-full bg-white py-2 px-3 text-primary leading-tight pr-17 placeholder-primary/70"
