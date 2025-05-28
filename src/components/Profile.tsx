@@ -12,7 +12,7 @@ export default function Profile({
   description,
 }: ProfileProps) {
   return (
-    <div className="profile bg-white shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg p-6 mb-8 dark:bg-secondary text-center">
+    <div className="profile bg-white shadow-md hover:shadow-2xl rounded-lg p-6 mb-8 dark:bg-secondary text-center transition-all duration-300 ease-in-out">
       {image_url && (
         <div className="flex justify-center mb-4">
           <img
@@ -20,7 +20,7 @@ export default function Profile({
             src={image_url}
             height={200}
             width={200}
-            className="rounded-full shadow-2xl"
+            className="rounded-full shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out"
           />
         </div>
       )}

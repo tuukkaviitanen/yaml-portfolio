@@ -14,7 +14,7 @@ export default function Links({ links }: LinksProps) {
         {links?.map((link) => (
           <li
             key={link.id}
-            className="bg-white shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out rounded-lg p-4 flex items-center space-x-4 dark:bg-secondary"
+            className="bg-white shadow-md hover:shadow-2xl rounded-lg p-4 flex items-center space-x-4 dark:bg-secondary transition-all duration-300 ease-in-out"
           >
             {link.icon_url && (
               <img
