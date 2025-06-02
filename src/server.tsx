@@ -2,12 +2,10 @@ import { renderToReadableStream } from "react-dom/server";
 import App from "./App";
 import { getConfiguration } from "./utils/configuration";
 import type { PopulatedConfiguration } from "./utils/types";
-import cache from "./utils/cache";
+import { CONFIG_FILE_PATH, NODE_ENV, PORT } from "./utils/env";
 
-const PORT = Bun.env.PORT || 3000;
-const CONFIG_FILE_PATH = Bun.env.CONFIG_FILE_PATH || "./portfolio.yaml";
+const isDevelopment = NODE_ENV === "development";
 
-const isDevelopment = Bun.env.NODE_ENV === "development";
 
 if (isDevelopment) {
   console.info("Building client bundles...");
@@ -23,8 +21,6 @@ if (isDevelopment) {
 
   console.info("Client bundles built successfully");
 }
-
-await cache.initialize();
 
 const compressedStyles = Bun.gzipSync(
   await Bun.file("./dist/styles.css").arrayBuffer()
