@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile.prod
     volumes:
       - ./portfolio.yaml:/app/portfolio.yaml
+    env_file:
+      - .env
     environment:
       - PORT=3000
       - REDIS_URL=redis://redis:6379

@@ -45,3 +45,5 @@ portfolio.yaml
 dist
 
 .direnv
+
+*.http
