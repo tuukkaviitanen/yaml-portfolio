@@ -132,7 +132,7 @@ const populateConfiguration = async (
 };
 
 const defaultGithubHeaders = {
-  Authorization: `bearer ${GITHUB_TOKEN}`,
+  Authorization: `Bearer ${GITHUB_TOKEN}`,
 };
 
 const getUserInfo = async (github_username: string) => {
