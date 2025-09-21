@@ -35,6 +35,8 @@ export const GitHubUserSchema = z.object({
   bio: z.string(),
 });
 
+export type GitHubUser = z.infer<typeof GitHubUserSchema>;
+
 export const GitHubRepositorySchema = z.object({
   name: z.string(),
   html_url: z.string().url(),
@@ -46,3 +48,5 @@ export const GitHubRepositorySchema = z.object({
   homepage: z.string().nullable(),
   languages: z.array(z.string()).optional(),
 });
+
+export type GitHubRepository = z.infer<typeof GitHubRepositorySchema>;

@@ -3,7 +3,8 @@
     "dev": "bun run --watch ./src/server.tsx",
     "build": "bun build ./src/server.tsx --target=bun --outdir=dist --minify && bun build ./src/client.tsx --target=browser --outdir=dist --minify",
     "start": "bun run ./dist/server.js",
-    "lint": "eslint",
+    "lint:check": "biome check",
+    "lint:fix": "biome check --write",
     "compile-styles": "bunx @tailwindcss/cli -i ./src/global.css -o ./dist/styles.css"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "zustand": "5.0.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.4",
     "@eslint/js": "9.36.0",
     "@types/bun": "1.2.22",
     "@types/react": "19.1.13",

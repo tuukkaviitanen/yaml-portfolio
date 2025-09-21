@@ -5,6 +5,7 @@ import { ConfigurationError } from "./errors";
 import {
   ConfigurationSchema,
   GitHubRepositorySchema,
+  type GitHubUser,
   GitHubUserSchema,
 } from "./schemas";
 import type { Configuration, PopulatedConfiguration } from "./types";
@@ -54,7 +55,7 @@ const populateConfiguration = async (
 ): Promise<PopulatedConfiguration> => {
   const github_user_url = `https://github.com/${configuration.github_username}`;
 
-  let github_user_info;
+  let github_user_info: GitHubUser | undefined;
   try {
     github_user_info = await getUserInfo(configuration.github_username);
   } catch {

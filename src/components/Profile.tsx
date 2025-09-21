@@ -16,7 +16,7 @@ export default function Profile({
       {image_url && (
         <div className="flex justify-center mb-4">
           <img
-            alt={`Profile image for ${name}`}
+            alt={`Profile for ${name}`}
             src={image_url}
             height={200}
             width={200}
