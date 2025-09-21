@@ -1,14 +1,14 @@
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
+import seedrandom from "seedrandom";
+import useStore from "../hooks/useStore";
+import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
-import useStore from "../hooks/useStore";
-import seedrandom from "seedrandom";
 
 const doesProjectMatchFilter = (
   project: PopulatedProject,
-  filter: string
+  filter: string,
 ): boolean => {
   const filterLower = filter.toLowerCase();
 
@@ -56,7 +56,7 @@ const shuffleArray = (array: Array<any>, randomGenerator: seedrandom.PRNG) =>
 
 const getShuffledTags = (
   projects: PopulatedProject[],
-  numberOfTags: number
+  numberOfTags: number,
 ) => {
   const allTags = projects.flatMap((project) => [
     ...(project.languages ?? []),

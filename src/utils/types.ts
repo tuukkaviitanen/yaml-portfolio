@@ -1,5 +1,5 @@
-import { z } from "zod";
-import type { LinkSchema, ProjectSchema, ConfigurationSchema } from "./schemas";
+import type { z } from "zod";
+import type { ConfigurationSchema, LinkSchema, ProjectSchema } from "./schemas";
 
 export type Link = z.infer<typeof LinkSchema>;
 

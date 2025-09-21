@@ -4,5 +4,5 @@ import type { PopulatedConfiguration } from "./utils/types";
 
 hydrateRoot(
   document,
-  <App configuration={window.configuration as PopulatedConfiguration} />
+  <App configuration={window.configuration as PopulatedConfiguration} />,
 );
