@@ -1,11 +1,10 @@
 import { renderToReadableStream } from "react-dom/server";
 import App from "./App";
 import { getConfiguration } from "./utils/configuration";
-import type { PopulatedConfiguration } from "./utils/types";
 import { CONFIG_FILE_PATH, NODE_ENV, PORT } from "./utils/env";
+import type { PopulatedConfiguration } from "./utils/types";
 
 const isDevelopment = NODE_ENV === "development";
-
 
 if (isDevelopment) {
   console.info("Building client bundles...");
@@ -23,10 +22,10 @@ if (isDevelopment) {
 }
 
 const compressedStyles = Bun.gzipSync(
-  await Bun.file("./dist/styles.css").arrayBuffer()
+  await Bun.file("./dist/styles.css").arrayBuffer(),
 );
 const compressedClient = Bun.gzipSync(
-  await Bun.file("./dist/client.js").arrayBuffer()
+  await Bun.file("./dist/client.js").arrayBuffer(),
 );
 
 console.info(`Listening on port ${PORT}`);
@@ -46,10 +45,10 @@ Bun.serve({
         <App configuration={configuration} />,
         {
           bootstrapScriptContent: `window.configuration = ${JSON.stringify(
-            configuration
+            configuration,
           )}`,
           bootstrapScripts: ["/client.js"],
-        }
+        },
       );
       return new Response(stream, {
         headers: { "Content-Type": "text/html" },

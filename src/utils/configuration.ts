@@ -1,13 +1,14 @@
-import { ConfigurationError } from "./errors";
 import YAML from "yaml";
+import cache from "./cache";
+import { GITHUB_TOKEN } from "./env";
+import { ConfigurationError } from "./errors";
 import {
   ConfigurationSchema,
   GitHubRepositorySchema,
+  type GitHubUser,
   GitHubUserSchema,
 } from "./schemas";
 import type { Configuration, PopulatedConfiguration } from "./types";
-import { GITHUB_TOKEN } from "./env";
-import cache from "./cache";
 
 export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
@@ -50,11 +51,11 @@ const parseConfigurationString = async (configurationString: string) => {
 };
 
 const populateConfiguration = async (
-  configuration: Configuration
+  configuration: Configuration,
 ): Promise<PopulatedConfiguration> => {
   const github_user_url = `https://github.com/${configuration.github_username}`;
 
-  let github_user_info;
+  let github_user_info: GitHubUser | undefined;
   try {
     github_user_info = await getUserInfo(configuration.github_username);
   } catch {
@@ -67,14 +68,14 @@ const populateConfiguration = async (
         .map(async (project) => {
           try {
             const repositoryInfo = await getRepositoryInfo(
-              project.github_repository!
+              project.github_repository!,
             );
             return [project.github_repository!, repositoryInfo] as const;
           } catch {
             return [project.github_repository!, undefined] as const;
           }
-        }) ?? []
-    )
+        }) ?? [],
+    ),
   );
 
   const populatedConfiguration = {
@@ -158,7 +159,7 @@ const getUserInfo = async (github_username: string) => {
       `Failed fetching GitHub user info for ${github_username}`,
       {
         error,
-      }
+      },
     );
   }
 };
@@ -193,7 +194,7 @@ const getRepositoryInfo = async (github_repository: string) => {
   } catch (error) {
     throw new ConfigurationError(
       `Failed fetching repository info for ${github_repository}`,
-      { error }
+      { error },
     );
   }
 };

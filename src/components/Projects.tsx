@@ -1,14 +1,14 @@
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
+import seedrandom from "seedrandom";
+import useStore from "../hooks/useStore";
+import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
 import Link from "./Link";
 import { QuaternaryTitle, TertiaryTitle, Text } from "./Typography";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import type { PopulatedConfiguration, PopulatedProject } from "../utils/types";
-import useStore from "../hooks/useStore";
-import seedrandom from "seedrandom";
 
 const doesProjectMatchFilter = (
   project: PopulatedProject,
-  filter: string
+  filter: string,
 ): boolean => {
   const filterLower = filter.toLowerCase();
 
@@ -56,7 +56,7 @@ const shuffleArray = (array: Array<any>, randomGenerator: seedrandom.PRNG) =>
 
 const getShuffledTags = (
   projects: PopulatedProject[],
-  numberOfTags: number
+  numberOfTags: number,
 ) => {
   const allTags = projects.flatMap((project) => [
     ...(project.languages ?? []),
@@ -74,10 +74,8 @@ type ProjectsProps = {
 };
 
 export default function Projects({ projects }: ProjectsProps) {
-  if (!projects?.length) {
-    return null;
-  }
   const { filter, setFilter } = useStore();
+
   // Get tags only on first render
   const [popularTags] = useState(getShuffledTags(projects, 5));
   const isFirstRender = useRef(true);
@@ -95,6 +93,10 @@ export default function Projects({ projects }: ProjectsProps) {
     const element = document.querySelector(".projects");
     element?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [filteredProjects]);
+
+  if (!projects?.length) {
+    return null;
+  }
 
   return (
     <div className="projects mt-8">
@@ -146,7 +148,11 @@ const FilterField = ({
         value={filter}
         onChange={(event) => setFilter(event.target.value)}
       />
-      <button onClick={() => setFilter("")} className="hover:cursor-pointer">
+      <button
+        onClick={() => setFilter("")}
+        type="button"
+        className="hover:cursor-pointer"
+      >
         <XMarkIcon className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
       </button>
       <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
