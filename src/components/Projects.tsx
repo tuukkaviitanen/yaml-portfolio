@@ -169,7 +169,7 @@ const Project = ({ project }: { project: PopulatedProject }) => {
       {project.image_url && (
         <img
           loading="lazy"
-          alt={`Project ${project.name}`}
+          alt={`Project image for ${project.name}`}
           src={project.image_url}
           height={128}
           width={128}
