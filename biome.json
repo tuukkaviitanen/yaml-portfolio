@@ -24,7 +24,7 @@
       },
       "a11y": {
         "useKeyWithClickEvents": "off",
-		"noRedundantAlt": "off"
+        "noRedundantAlt": "off"
       },
       "suspicious": {
         "noExplicitAny": "off"
