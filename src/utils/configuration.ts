@@ -7,6 +7,7 @@ import {
 } from "./schemas";
 import type { Configuration, PopulatedConfiguration } from "./types";
 import { GITHUB_TOKEN } from "./env";
+import cache from "./cache";
 
 export const getConfiguration = async (filePath: string) => {
   const configFileContent = await getFileContent(filePath);
@@ -137,12 +138,20 @@ const defaultGithubHeaders = {
 
 const getUserInfo = async (github_username: string) => {
   const url = `https://api.github.com/users/${github_username}`;
+
   try {
+    const cachedValue = await cache.fetch(url);
+    if (cachedValue) {
+      return await GitHubUserSchema.parseAsync(cachedValue);
+    }
     const response = await Bun.fetch(url, { headers: defaultGithubHeaders });
     if (!response.ok) {
       throw new ConfigurationError(`HTTP error! Status: ${response.status}`);
     }
     const userInfo = await response.json();
+
+    await cache.store(url, userInfo);
+
     return await GitHubUserSchema.parseAsync(userInfo);
   } catch (error) {
     throw new ConfigurationError(
@@ -157,6 +166,10 @@ const getUserInfo = async (github_username: string) => {
 const getRepositoryInfo = async (github_repository: string) => {
   const url = `https://api.github.com/repos/${github_repository}`;
   try {
+    const cachedValue = await cache.fetch(url);
+    if (cachedValue) {
+      return await GitHubRepositorySchema.parseAsync(cachedValue);
+    }
     const response = await Bun.fetch(url, { headers: defaultGithubHeaders });
     if (!response.ok) {
       throw new ConfigurationError(`HTTP error! Status: ${response.status}`);
@@ -173,6 +186,8 @@ const getRepositoryInfo = async (github_repository: string) => {
       const languages = await response.json();
       repositoryInfo.languages = Object.keys(languages);
     }
+
+    await cache.store(url, repositoryInfo);
 
     return await GitHubRepositorySchema.parseAsync(repositoryInfo);
   } catch (error) {
