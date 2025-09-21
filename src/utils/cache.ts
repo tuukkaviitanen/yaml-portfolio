@@ -11,9 +11,9 @@ class Cache {
         try {
             const encodedValue = JSON.stringify(value)
             await this.client.set(key, encodedValue);
-            await this.client.expire(key, 3600);
+            await this.client.expire(key, 300) // 5 minutes
         } catch (error) {
-            console.error("Failed storing to Redis", { error })
+            console.error(`Failed storing ${key} to Redis`, { error })
         }
     }
 
@@ -22,7 +22,7 @@ class Cache {
             const encodedValue = await this.client.get(key);
             return encodedValue && JSON.parse(encodedValue);
         } catch (error) {
-            console.error("Failed fetching from Redis", { error })
+            console.error(`Failed fetching ${key} from Redis`, { error })
             return null;
         }
     }
