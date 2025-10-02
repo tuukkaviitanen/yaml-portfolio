@@ -27,6 +27,15 @@ class Cache {
     }
   }
 
+  async checkConnection() {
+    try {
+      await this.client.ping();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async initialize() {
     await this.client.connect();
   }

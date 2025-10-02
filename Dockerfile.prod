@@ -22,4 +22,7 @@ COPY --from=builder /app/dist/styles.css ./dist/styles.css
 
 ENV NODE_ENV=production
 
+ARG VERSION
+ENV VERSION=${VERSION}
+
 CMD [ "bun", "server.js" ]

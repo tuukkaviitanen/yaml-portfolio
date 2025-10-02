@@ -1,8 +1,9 @@
 import { renderToReadableStream } from "react-dom/server";
 import App from "./App";
 import { getConfiguration } from "./utils/configuration";
-import { CONFIG_FILE_PATH, NODE_ENV, PORT } from "./utils/env";
+import { CONFIG_FILE_PATH, NODE_ENV, PORT, VERSION } from "./utils/env";
 import type { PopulatedConfiguration } from "./utils/types";
+import cache from "./utils/cache";
 
 const isDevelopment = NODE_ENV === "development";
 
@@ -66,6 +67,12 @@ Bun.serve({
           "Content-Encoding": "gzip",
         },
       });
+    },
+    "/health": async () => {
+      return new Response(
+        JSON.stringify({ version: VERSION, redis_connection: await cache.checkConnection() ? "HEALTHY" : "UNHEALTHY" }),
+        { status: 200 },
+      );
     },
   },
 });
