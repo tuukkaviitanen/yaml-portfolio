@@ -147,14 +147,17 @@ const FilterField = ({
         placeholder="Filter projects..."
         value={filter}
         onChange={(event) => setFilter(event.target.value)}
+        name="project-filter"
       />
-      <button
-        onClick={() => setFilter("")}
-        type="button"
-        className="hover:cursor-pointer"
-      >
-        <XMarkIcon className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
-      </button>
+      {filter && (
+        <button
+          onClick={() => setFilter("")}
+          type="button"
+          className="hover:cursor-pointer hover:opacity-50 focus:opacity-50 transition-opacity duration-300 ease-in-out"
+        >
+          <XMarkIcon className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
+        </button>
+      )}
       <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
     </div>
   );
@@ -214,16 +217,17 @@ const Chips = ({ list }: { list: string[] }) => {
   const { setFilter } = useStore();
 
   return (
-    <ul className="flex flex-wrap gap-2 justify-center">
+    <div className="flex flex-wrap gap-2 justify-center">
       {list?.map((item) => (
-        <li
+        <button
           key={item}
           className="bg-accent/20 dark:bg-accent text-sm px-4 py-2 rounded-full hover:cursor-pointer hover:shadow-2xl hover:bg-accent/80 hover:text-white transition-all duration-300 ease-in-out"
           onClick={() => setFilter(item)}
+          type="button"
         >
           <span className="dark:text-white/90">{item}</span>
-        </li>
+        </button>
       ))}
-    </ul>
+    </div>
   );
 };
